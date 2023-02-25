@@ -11,7 +11,6 @@ class Img extends StatelessWidget {
   final String src;
   final double? height;
   final double? width;
-  final double? ratio;
   final BoxShape? shape;
   final BoxBorder? border;
 
@@ -23,7 +22,7 @@ class Img extends StatelessWidget {
   final BoxFit? fit;
   final Widget? placeholder;
   final String? blurHash;
-  final Widget child;
+  final Widget? child;
 
   const Img(
     this.src, {
@@ -32,7 +31,6 @@ class Img extends StatelessWidget {
     this.blurHash,
     this.placeholder,
     this.width,
-    this.ratio,
     this.shape,
     this.border,
     this.borderRadius,
@@ -46,7 +44,6 @@ class Img extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final svgRegX = RegExp(r'<\s*svg[^>]*>(.*?)<\s*/\s*svg>');
     if (svgRegX.hasMatch(src)) {
       return Container(
@@ -59,34 +56,6 @@ class Img extends StatelessWidget {
         child: child,
       );
     } else if (getImageType(src) == "asset") {
-      double? calHeight = 0;
-      double? calWidth = 0;
-      Image image = Image.asset(src);
-      Completer<ui.Image> completer = Completer<ui.Image>();
-      image.image
-          .resolve(const ImageConfiguration())
-          .addListener(ImageStreamListener((ImageInfo info, bool _) {
-        completer.complete(info.image);
-      }));
-      return Container(
-        height: height ?? calHeight,
-        width: width ?? calWidth,
-        margin: margin,
-        padding: padding,
-        decoration: BoxDecoration(
-          shape: shape ?? BoxShape.rectangle,
-          borderRadius: borderRadius,
-          border: border,
-          color: bgColor,
-          image: DecorationImage(
-            fit: fit,
-            colorFilter: colorFilter,
-            image: getImageProvider(src),
-          ),
-        ),
-        child: child,
-      );
-    } else {
       final svgExtRegX = RegExp(r'\.(svg)(?:\?.*|)$');
       if (svgExtRegX.hasMatch(src)) {
         return Container(
@@ -111,57 +80,95 @@ class Img extends StatelessWidget {
       } else {
         double? calHeight = 0;
         double? calWidth = 0;
-        Image image = Image.network(src);
+        Image image = Image.asset(src);
         Completer<ui.Image> completer = Completer<ui.Image>();
         image.image
             .resolve(const ImageConfiguration())
             .addListener(ImageStreamListener((ImageInfo info, bool _) {
           completer.complete(info.image);
         }));
-        return Expanded(
-          child: FutureBuilder<ui.Image>(
-            future: completer.future,
-            builder:
-                (BuildContext context, AsyncSnapshot<ui.Image> snapshot) {
-              if (snapshot.hasData) {
-                final ratio = MediaQuery.of(context).size.width/snapshot.data!.width;
-                calWidth = ratio * snapshot.data!.width;
-                calHeight = ratio * snapshot.data!.height;
-              }
-              return CachedNetworkImage(
-                imageUrl: src,
-                imageBuilder: (context, imageProvider) {
-                  return Container(
-                    height: height ?? calHeight,
-                    width: width ?? calWidth,
-                    margin: margin,
-                    padding: padding,
-                    decoration: BoxDecoration(
-                      shape: shape ?? BoxShape.rectangle,
-                      borderRadius: borderRadius,
-                      border: border,
-                      color: bgColor,
-                      image: DecorationImage(
-                        image: imageProvider,
-                        fit: fit,
-                        colorFilter: colorFilter,
-                      ),
-                    ),
-                    // need to marge with ImageProvider
-                    child: child,
-                  );
-                },
-                height: height ?? calHeight,
-                width: width ?? calWidth,
-                placeholder: (context, url) {
-                  return placeholder ??
-                      BlurHash(hash: blurHash ?? "L5H2EC=PM+yV0g-mq.wG9c010J}I");
-                },
-              );
-            },
-          ),
+
+        return FutureBuilder<ui.Image>(
+          future: completer.future,
+          builder: (BuildContext context, AsyncSnapshot<ui.Image> snapshot) {
+            if (snapshot.hasData) {
+              final ratio =
+                  MediaQuery.of(context).size.width / snapshot.data!.width;
+              calWidth = ratio * snapshot.data!.width;
+              calHeight = ratio * snapshot.data!.height;
+            }
+            return Container(
+              height: height ?? calHeight,
+              width: width ?? calWidth,
+              margin: margin,
+              padding: padding,
+              decoration: BoxDecoration(
+                shape: shape ?? BoxShape.rectangle,
+                borderRadius: borderRadius,
+                border: border,
+                color: bgColor,
+                image: DecorationImage(
+                  fit: fit,
+                  colorFilter: colorFilter,
+                  image: getImageProvider(src),
+                ),
+              ),
+              child: child,
+            );
+          },
         );
       }
+    } else {
+      double? calHeight = 0;
+      double? calWidth = 0;
+      Image image = Image.network(src);
+      Completer<ui.Image> completer = Completer<ui.Image>();
+      image.image
+          .resolve(const ImageConfiguration())
+          .addListener(ImageStreamListener((ImageInfo info, bool _) {
+        completer.complete(info.image);
+      }));
+      return FutureBuilder<ui.Image>(
+        future: completer.future,
+        builder: (BuildContext context, AsyncSnapshot<ui.Image> snapshot) {
+          if (snapshot.hasData) {
+            final ratio =
+                MediaQuery.of(context).size.width / snapshot.data!.width;
+            calWidth = ratio * snapshot.data!.width;
+            calHeight = ratio * snapshot.data!.height;
+          }
+          return CachedNetworkImage(
+            imageUrl: src,
+            imageBuilder: (context, imageProvider) {
+              return Container(
+                height: height ?? calHeight,
+                width: width ?? calWidth,
+                margin: margin,
+                padding: padding,
+                decoration: BoxDecoration(
+                  shape: shape ?? BoxShape.rectangle,
+                  borderRadius: borderRadius,
+                  border: border,
+                  color: bgColor,
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: fit,
+                    colorFilter: colorFilter,
+                  ),
+                ),
+                // need to marge with ImageProvider
+                child: child,
+              );
+            },
+            height: height ?? calHeight,
+            width: width ?? calWidth,
+            placeholder: (context, url) {
+              return placeholder ??
+                  BlurHash(hash: blurHash ?? "L5H2EC=PM+yV0g-mq.wG9c010J}I");
+            },
+          );
+        },
+      );
     }
   }
 }

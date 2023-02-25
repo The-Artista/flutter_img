@@ -1,11 +1,11 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=/home/ishaf/Documents/flutter
-FLUTTER_APPLICATION_PATH=/home/ishaf/Documents/data/ishaf/flutter_img
+FLUTTER_ROOT=C:\Users\ishaf\AndroidStudioProjects\flutter_img\.fvm\flutter_sdk
+FLUTTER_APPLICATION_PATH=C:\Users\ishaf\AndroidStudioProjects\flutter_img
 COCOAPODS_PARALLEL_CODE_SIGN=true
 FLUTTER_BUILD_DIR=build
-FLUTTER_BUILD_NAME=0.0.1
-FLUTTER_BUILD_NUMBER=0.0.1
+FLUTTER_BUILD_NAME=0.0.2
+FLUTTER_BUILD_NUMBER=0.0.2
 DART_OBFUSCATION=false
-TRACK_WIDGET_CREATION=true
+TRACK_WIDGET_CREATION=false
 TREE_SHAKE_ICONS=false
 PACKAGE_CONFIG=.dart_tool/package_config.json
