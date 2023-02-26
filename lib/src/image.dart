@@ -25,22 +25,22 @@ class Img extends StatelessWidget {
   final Widget? child;
 
   const Img(
-    this.src, {
-    super.key,
-    this.height,
-    this.blurHash,
-    this.placeholder,
-    this.width,
-    this.shape,
-    this.border,
-    this.borderRadius,
-    this.margin,
-    this.padding,
-    this.colorFilter,
-    this.bgColor,
-    this.fit,
-    this.child = const Text(''),
-  });
+      this.src, {
+        super.key,
+        this.height,
+        this.blurHash,
+        this.placeholder,
+        this.width,
+        this.shape,
+        this.border,
+        this.borderRadius,
+        this.margin,
+        this.padding,
+        this.colorFilter,
+        this.bgColor,
+        this.fit,
+        this.child = const Text(''),
+      });
 
   @override
   Widget build(BuildContext context) {
