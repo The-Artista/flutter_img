@@ -119,56 +119,80 @@ class Img extends StatelessWidget {
         );
       }
     } else {
-      double? calHeight = 0;
-      double? calWidth = 0;
-      Image image = Image.network(src);
-      Completer<ui.Image> completer = Completer<ui.Image>();
-      image.image
-          .resolve(const ImageConfiguration())
-          .addListener(ImageStreamListener((ImageInfo info, bool _) {
-        completer.complete(info.image);
-      }));
-      return FutureBuilder<ui.Image>(
-        future: completer.future,
-        builder: (BuildContext context, AsyncSnapshot<ui.Image> snapshot) {
-          if (snapshot.hasData) {
-            final ratio =
-                MediaQuery.of(context).size.width / snapshot.data!.width;
-            calWidth = ratio * snapshot.data!.width;
-            calHeight = ratio * snapshot.data!.height;
-          }
-          return CachedNetworkImage(
-            imageUrl: src,
-            imageBuilder: (context, imageProvider) {
-              return Container(
-                height: height ?? calHeight,
-                width: width ?? calWidth,
-                margin: margin,
-                padding: padding,
-                decoration: BoxDecoration(
-                  shape: shape ?? BoxShape.rectangle,
-                  borderRadius: borderRadius,
-                  border: border,
-                  color: bgColor,
-                  image: DecorationImage(
-                    image: imageProvider,
-                    fit: fit,
-                    colorFilter: colorFilter,
+      final svgExtRegX = RegExp(r'\.(svg)(?:\?.*|)$');
+      if(!svgExtRegX.hasMatch(src)){
+        double? calHeight = 0;
+        double? calWidth = 0;
+        Image image = Image.network(src);
+        Completer<ui.Image> completer = Completer<ui.Image>();
+        image.image
+            .resolve(const ImageConfiguration())
+            .addListener(ImageStreamListener((ImageInfo info, bool _) {
+          completer.complete(info.image);
+        }));
+        return FutureBuilder<ui.Image>(
+          future: completer.future,
+          builder: (BuildContext context, AsyncSnapshot<ui.Image> snapshot) {
+            if (snapshot.hasData) {
+              final ratio =
+                  MediaQuery.of(context).size.width / snapshot.data!.width;
+              calWidth = ratio * snapshot.data!.width;
+              calHeight = ratio * snapshot.data!.height;
+            }
+            return CachedNetworkImage(
+              imageUrl: src,
+              imageBuilder: (context, imageProvider) {
+                return Container(
+                  height: height ?? calHeight,
+                  width: width ?? calWidth,
+                  margin: margin,
+                  padding: padding,
+                  decoration: BoxDecoration(
+                    shape: shape ?? BoxShape.rectangle,
+                    borderRadius: borderRadius,
+                    border: border,
+                    color: bgColor,
+                    image: DecorationImage(
+                      image: imageProvider,
+                      fit: fit,
+                      colorFilter: colorFilter,
+                    ),
                   ),
-                ),
-                // need to marge with ImageProvider
-                child: child,
-              );
-            },
-            height: height ?? calHeight,
-            width: width ?? calWidth,
-            placeholder: (context, url) {
-              return placeholder ??
-                  BlurHash(hash: blurHash ?? "L5H2EC=PM+yV0g-mq.wG9c010J}I");
-            },
-          );
-        },
-      );
+                  // need to marge with ImageProvider
+                  child: child,
+                );
+              },
+              height: height ?? calHeight,
+              width: width ?? calWidth,
+              placeholder: (context, url) {
+                return placeholder ??
+                    BlurHash(hash: blurHash ?? "L5H2EC=PM+yV0g-mq.wG9c010J}I");
+              },
+            );
+          },
+        );
+      }
+      else{
+        return Container(
+          height: height,
+          width: width ?? MediaQuery.of(context).size.width,
+          margin: margin,
+          padding: padding,
+          decoration: BoxDecoration(
+            shape: shape ?? BoxShape.rectangle,
+            borderRadius: borderRadius,
+            border: border,
+            color: bgColor,
+            image: DecorationImage(
+              image: getImageProvider(src),
+              fit: fit,
+              colorFilter: colorFilter,
+            ),
+          ),
+          // need to marge with ImageProvider
+          child: child,
+        );
+      }
     }
   }
 }
