@@ -14,13 +14,11 @@ The following files format are supported:
 Basic examole
 
 ```dart
-Img
-('https://miro.medium.com/v2/resize:fit:4800/0*bDz2chibrm3B6QZE
-'
-,fit: BoxFit.fill,
-blurHash: 'LGSF|mNH~U?G-oR+Rkt6^%xZD+Ip',
-)
-,
+Img(
+  'https://miro.medium.com/v2/resize:fit:4800/0*bDz2chibrm3B6QZE',
+  fit: BoxFit.fill, 
+  blurHash: 'LGSF|mNH~U?G-oR+Rkt6^%xZD+Ip',
+),
 ```
 
 ### Paramiters
