@@ -1,4 +1,12 @@
-include: package:flutter_lints/flutter.yaml
+include: package:lint/analysis_options.yaml
 
+
+analyzer:
+  exclude:
+    - lib/ioc.config.dart
+    - lib/**/*.freezed.dart
+    - lib/**/*.g.dart
+    - lib/**/*.gr.dart
+linter:
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

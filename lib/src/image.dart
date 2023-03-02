@@ -1,3 +1,10 @@
+///
+/// * author: Safiul Islam
+/// * email: shafiulislam20@gmail.com
+///
+/// Just another flutter image widget that can handle asset and network png, jpg, and SVG
+///
+
 import 'dart:async';
 import 'dart:ui' as ui;
 
@@ -8,6 +15,12 @@ import 'package:flutter_img/src/svg_decoration.dart';
 import 'package:flutter_img/src/svg_provider.dart';
 
 class Img extends StatelessWidget {
+  ///
+  /// A widget that renders your images
+  ///
+  /// `src` is the one and only positional parameter here, and its requred it will take the asset link, HTTP image link, or SVG code as a string. as you know it takes a string, so for SVG code make sure there is no new line.
+  ///
+  ///
   final String src;
   final double? height;
   final double? width;
@@ -25,22 +38,22 @@ class Img extends StatelessWidget {
   final Widget? child;
 
   const Img(
-      this.src, {
-        super.key,
-        this.height,
-        this.blurHash,
-        this.placeholder,
-        this.width,
-        this.shape,
-        this.border,
-        this.borderRadius,
-        this.margin,
-        this.padding,
-        this.colorFilter,
-        this.bgColor,
-        this.fit,
-        this.child = const Text(''),
-      });
+    this.src, {
+    super.key,
+    this.height,
+    this.blurHash,
+    this.placeholder,
+    this.width,
+    this.shape,
+    this.border,
+    this.borderRadius,
+    this.margin,
+    this.padding,
+    this.colorFilter,
+    this.bgColor,
+    this.fit,
+    this.child = const Text(''),
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -80,13 +93,13 @@ class Img extends StatelessWidget {
       } else {
         double? calHeight = 0;
         double? calWidth = 0;
-        Image image = Image.asset(src);
-        Completer<ui.Image> completer = Completer<ui.Image>();
-        image.image
-            .resolve(const ImageConfiguration())
-            .addListener(ImageStreamListener((ImageInfo info, bool _) {
-          completer.complete(info.image);
-        }));
+        final Image image = Image.asset(src);
+        final Completer<ui.Image> completer = Completer<ui.Image>();
+        image.image.resolve(ImageConfiguration.empty).addListener(
+          ImageStreamListener((ImageInfo info, bool _) {
+            completer.complete(info.image);
+          }),
+        );
 
         return FutureBuilder<ui.Image>(
           future: completer.future,
@@ -120,16 +133,16 @@ class Img extends StatelessWidget {
       }
     } else {
       final svgExtRegX = RegExp(r'\.(svg)(?:\?.*|)$');
-      if(!svgExtRegX.hasMatch(src)){
+      if (!svgExtRegX.hasMatch(src)) {
         double? calHeight = 0;
         double? calWidth = 0;
-        Image image = Image.network(src);
-        Completer<ui.Image> completer = Completer<ui.Image>();
-        image.image
-            .resolve(const ImageConfiguration())
-            .addListener(ImageStreamListener((ImageInfo info, bool _) {
-          completer.complete(info.image);
-        }));
+        final Image image = Image.network(src);
+        final Completer<ui.Image> completer = Completer<ui.Image>();
+        image.image.resolve(ImageConfiguration.empty).addListener(
+          ImageStreamListener((ImageInfo info, bool _) {
+            completer.complete(info.image);
+          }),
+        );
         return FutureBuilder<ui.Image>(
           future: completer.future,
           builder: (BuildContext context, AsyncSnapshot<ui.Image> snapshot) {
@@ -171,8 +184,7 @@ class Img extends StatelessWidget {
             );
           },
         );
-      }
-      else{
+      } else {
         return Container(
           height: height,
           width: width ?? MediaQuery.of(context).size.width,
@@ -198,6 +210,9 @@ class Img extends StatelessWidget {
 }
 
 ImageProvider<Object> getImageProvider(String src) {
+  ///
+  /// `getImageProvider` will return a object of Image provider that will use for BoxDecoration->image->DecorationImage->image
+  ///
   final httpRegX = RegExp(
     r'(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])',
   );
@@ -221,33 +236,10 @@ ImageProvider<Object> getImageProvider(String src) {
     }
   }
 }
-
-ImageProvider<Object> getImage(String src) {
-  final httpRegX = RegExp(
-    r'(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])',
-  );
-  final svgExtRegX = RegExp(r'\.(svg)(?:\?.*|)$');
-  if (httpRegX.hasMatch(src)) {
-    if (svgExtRegX.hasMatch(src)) {
-      return SvgProvider(
-        src,
-        source: SvgSource.network,
-      );
-    } else {
-      return NetworkImage(src);
-    }
-  } else {
-    if (svgExtRegX.hasMatch(src)) {
-      return SvgProvider(
-        src,
-      );
-    } else {
-      return AssetImage(src);
-    }
-  }
-}
-
 String getImageType(String src) {
+  ///
+  /// this function will return is provided src string is from assets or network
+  ///
   final httpRegX = RegExp(
     r'(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])',
   );
