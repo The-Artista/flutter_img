@@ -89,7 +89,7 @@ class SvgProvider extends ImageProvider<SvgImageKey> {
       ),
       clipToViewBox: false,
       colorFilter: ColorFilter.mode(
-        getFilterColor(key.color!),
+        _getFilterColor(key.color!),
         BlendMode.srcATop,
       ),
     );
@@ -107,7 +107,7 @@ class SvgProvider extends ImageProvider<SvgImageKey> {
   @override
   String toString() => '$runtimeType(${describeIdentity(path)})';
 
-  static Color getFilterColor(Color color) {
+  static Color _getFilterColor(Color color) {
     if (kIsWeb && color == Colors.transparent) {
       return const Color(0x01ffffff);
     } else {
