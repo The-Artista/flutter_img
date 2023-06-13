@@ -39,7 +39,10 @@ class _MyHomePageState extends State<MyHomePage> {
         child: ListView(
           children: [
 
-            CachedNetworkSVGImage(url: "https://raw.githubusercontent.com/shafi-org/portfolio/master/src/assets/flutter-svgrepo-com.svg"),
+            Img('https://raw.githubusercontent.com/shafi-org/portfolio/master/src/assets/flutter-svgrepo-com.svg'),
+            Img('https://miro.medium.com/v2/resize:fit:4800/0*bDz2chibrm3B6QZE'),
+            Img('assets/images/lockup_flutter_horizontal.png'),
+            Img('assets/images/flutter-svgrepo-com.svg'),
 /*
             const Img(
               'https://miro.medium.com/v2/resize:fit:4800/0*bDz2chibrm3B6QZE',
