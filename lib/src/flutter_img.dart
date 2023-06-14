@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_img/src/assert_image.dart';
 import 'package:flutter_img/src/network_image.dart';
@@ -89,19 +88,40 @@ class Img extends StatelessWidget {
   /// and the default value is L5H2EC=PM+yV0g-mq.wG9c010J}I
   final String? blurHash;
 
-
   @override
   Widget build(BuildContext context) {
     if (_getImageType() == 'network') {
-      return NetworkImagehandeler(src);
+      return NetworkImagehandeler(
+        src,
+        width: width,
+        height: height,
+        colorFilter: colorFilter,
+        borderRadius: borderRadius,
+        margin: margin,
+        padding: padding,
+        backgroundColor: bgColor,
+        border: border,
+        shape: shape,
+      );
     } else {
-      return AssetImagehandeler(src);
+      return AssetImagehandeler(
+        src,
+        width: width,
+        height: height,
+        colorFilter: colorFilter,
+        borderRadius: borderRadius,
+        margin: margin,
+        padding: padding,
+        backgroundColor: bgColor,
+        border: border,
+        shape: shape,
+      );
     }
   }
 
   String _getImageType() {
     final httpRegX = RegExp(
-      r'(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])',
+      r'^(http|https)?:\/\/(.*)',
     );
     if (httpRegX.hasMatch(src)) {
       return 'network';

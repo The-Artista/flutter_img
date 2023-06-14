@@ -4,65 +4,41 @@ import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter_img/src/shapes.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class NetworkImagehandeler extends StatefulWidget {
   NetworkImagehandeler(
-    String url, {
-    Key? key,
-    Widget? placeholder,
-    Widget? errorWidget,
-    double? width,
-    double? height,
-    BoxFit fit = BoxFit.contain,
-    AlignmentGeometry alignment = Alignment.center,
-    bool matchTextDirection = false,
-    bool allowDrawingOutsideViewBox = false,
-    @deprecated Color? color,
-    @deprecated BlendMode colorBlendMode = BlendMode.srcIn,
-    String? semanticsLabel,
-    bool excludeFromSemantics = false,
-    SvgTheme theme = const SvgTheme(),
-    Duration fadeDuration = const Duration(milliseconds: 300),
-    ColorFilter? colorFilter,
-    WidgetBuilder? placeholderBuilder,
-  })  : _url = url,
-        _placeholder = placeholder,
-        _errorWidget = errorWidget,
-        _width = width,
-        _height = height,
-        _fit = fit,
-        _alignment = alignment,
-        _matchTextDirection = matchTextDirection,
-        _allowDrawingOutsideViewBox = allowDrawingOutsideViewBox,
-        _color = color,
-        _colorBlendMode = colorBlendMode,
-        _semanticsLabel = semanticsLabel,
-        _excludeFromSemantics = excludeFromSemantics,
-        _theme = theme,
-        _fadeDuration = fadeDuration,
-        _colorFilter = colorFilter,
-        _placeholderBuilder = placeholderBuilder,
-        super(key: key ?? ValueKey(url));
+    this.src, {
+    this.placeholder,
+    this.colorFilter,
+    this.width,
+    this.height,
+    this.errorWidget,
+    this.fadeDuration = const Duration(milliseconds: 300),
+    this.border,
+    this.padding,
+    this.margin,
+    this.borderRadius,
+    this.backgroundColor,
+    this.shape,
+  });
 
-  final String _url;
-  final Widget? _placeholder;
-  final Widget? _errorWidget;
-  final double? _width;
-  final double? _height;
-  final BoxFit _fit;
-  final AlignmentGeometry _alignment;
-  final bool _matchTextDirection;
-  final bool _allowDrawingOutsideViewBox;
-  final Color? _color;
-  final BlendMode _colorBlendMode;
-  final String? _semanticsLabel;
-  final bool _excludeFromSemantics;
-  final SvgTheme _theme;
-  final Duration _fadeDuration;
-  final ColorFilter? _colorFilter;
-  final WidgetBuilder? _placeholderBuilder;
+  final String src;
+  final Widget? placeholder;
+  final Widget? errorWidget;
+  final double? width;
+  final double? height;
+  final Duration? fadeDuration;
+  final ColorFilter? colorFilter;
+  final BoxShape? shape;
+  final Color? backgroundColor;
+  final BoxBorder? border;
+  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
+  final BorderRadiusGeometry? borderRadius;
 
   @override
   State<NetworkImagehandeler> createState() => _NetworkImagehandelerState();
@@ -94,12 +70,12 @@ class _NetworkImagehandelerState extends State<NetworkImagehandeler> with Single
 
   @override
   void initState() {
-    _cacheKey = NetworkImagehandeler._generateKeyFromUrl(widget._url);
+    _cacheKey = NetworkImagehandeler._generateKeyFromUrl(widget.src);
     super.initState();
     _cacheManager = DefaultCacheManager();
     _controller = AnimationController(
       vsync: this,
-      duration: widget._fadeDuration,
+      duration: widget.fadeDuration,
     );
     _animation = Tween(begin: 0.0, end: 1.0).animate(_controller);
     _loadImage();
@@ -111,7 +87,7 @@ class _NetworkImagehandelerState extends State<NetworkImagehandeler> with Single
 
       var file = (await _cacheManager.getFileFromMemory(_cacheKey))?.file;
 
-      file ??= await _cacheManager.getSingleFile(widget._url, key: _cacheKey);
+      file ??= await _cacheManager.getSingleFile(widget.src, key: _cacheKey);
 
       _imageFile = file;
       _isLoading = false;
@@ -150,8 +126,8 @@ class _NetworkImagehandelerState extends State<NetworkImagehandeler> with Single
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: widget._width,
-      height: widget._height,
+      width: widget.width,
+      height: widget.height,
       child: _buildImage(),
     );
   }
@@ -167,26 +143,29 @@ class _NetworkImagehandelerState extends State<NetworkImagehandeler> with Single
     );
   }
 
-  Widget _buildPlaceholderWidget() => Center(child: widget._placeholder ?? const SizedBox());
+  Widget _buildPlaceholderWidget() => Center(
+        child: widget.placeholder ??
+            SizedBox(
+              width: widget.width ?? 200,
+              height: widget.height ?? 200,
+              child: const BlurHash(hash: 'L5H2EC=PM+yV0g-mq.wG9c010J}I'),
+            ),
+      );
 
-  Widget _buildErrorWidget() => Center(child: widget._errorWidget ?? const SizedBox());
+  Widget _buildErrorWidget() => Center(child: widget.errorWidget ?? const SizedBox());
 
   Widget _buildSVGImage() {
-    return SvgPicture.file(
-      _imageFile!,
-      fit: widget._fit,
-      width: widget._width,
-      height: widget._height,
-      alignment: widget._alignment,
-      matchTextDirection: widget._matchTextDirection,
-      allowDrawingOutsideViewBox: widget._allowDrawingOutsideViewBox,
-      color: widget._color,
-      colorBlendMode: widget._colorBlendMode,
-      semanticsLabel: widget._semanticsLabel,
-      excludeFromSemantics: widget._excludeFromSemantics,
-      colorFilter: widget._colorFilter,
-      placeholderBuilder: widget._placeholderBuilder,
-      theme: widget._theme,
+    return ImageShape(
+      shape: widget.shape,
+      border: widget.border,
+      backgroundColor: widget.backgroundColor,
+      padding: widget.padding,
+      margin: widget.margin,
+      colorFilter: widget.colorFilter,
+      borderRadius: widget.borderRadius,
+      child: SvgPicture.file(
+        _imageFile!,
+      ),
     );
   }
 
@@ -223,18 +202,21 @@ class _NetworkImagehandelerState extends State<NetworkImagehandeler> with Single
           calWidth = ratio * snapshot.data!.width;
           calHeight = ratio * snapshot.data!.height;
         }
-        return CircleAvatar(
-          radius: 100,
-          child: ClipOval(
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: Image.file(
-                _imageFile!,
-                height: widget._height ?? calHeight,
-                width: widget._width ?? calWidth,
-                fit: widget._fit,
-              ),
-            ),
+
+        return ImageShape(
+          height: widget.height ?? calHeight,
+          width: widget.width ?? calWidth,
+          shape: widget.shape,
+          border: widget.border,
+          padding: widget.padding,
+          margin: widget.margin,
+          borderRadius: widget.borderRadius,
+          colorFilter: widget.colorFilter,
+          backgroundColor: widget.backgroundColor,
+          child: Image.file(
+            _imageFile!,
+            height: widget.height ?? calHeight,
+            width: widget.width ?? calWidth,
           ),
         );
       },

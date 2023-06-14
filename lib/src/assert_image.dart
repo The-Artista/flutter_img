@@ -1,20 +1,41 @@
 import 'dart:async';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:flutter_img/src/shapes.dart';
 import 'package:flutter_svg/svg.dart';
 
 class AssetImagehandeler extends StatelessWidget {
-  const AssetImagehandeler(this.src, {super.key});
+  const AssetImagehandeler(
+    this.src, {
+    super.key,
+    this.height,
+    this.width,
+    this.shape,
+    this.padding,
+    this.margin,
+    this.border,
+    this.colorFilter,
+    this.borderRadius,
+    this.backgroundColor,
+  });
 
   final String src;
+  final double? height;
+  final double? width;
+  final BoxShape? shape;
+  final Color? backgroundColor;
+  final BoxBorder? border;
+  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
+  final BorderRadiusGeometry? borderRadius;
+  final ColorFilter? colorFilter;
 
   @override
   Widget build(BuildContext context) {
-    if (_getFileExtension(src) == '.svg') {
-      print("dd");
-      return _buildSvgImage();
+    if (_getFileExtension(src) == '.png' || _getFileExtension(src) == '.jpg' || _getFileExtension(src) == '.jpeg') {
+      return _buildImage();
     }
-    return _buildImage();
+    return _buildSvgImage();
   }
 
   String _getFileExtension(String fileName) {
@@ -40,18 +61,36 @@ class AssetImagehandeler extends StatelessWidget {
           calWidth = ratio * snapshot.data!.width;
           calHeight = ratio * snapshot.data!.height;
         }
-        return Image.asset(
-          src,
-          height: calHeight,
-          width: calWidth,
+        return ImageShape(
+          height: height ?? calHeight,
+          width: width ?? calWidth,
+          shape: shape,
+          border: border,
+          padding: padding,
+          margin: margin,
+          borderRadius: borderRadius,
+          colorFilter: colorFilter,
+          backgroundColor: backgroundColor,
+          child: Image.asset(
+            src,
+            height: height ?? calHeight,
+            width: width ?? calWidth,
+          ),
         );
       },
     );
   }
 
   Widget _buildSvgImage() {
-    return SvgPicture.string(
-      '<svg width="317px" height="317px" viewBox="-30.5 0 317 317" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid"> <defs> <linearGradient x1="3.9517088%" y1="26.9930287%" x2="75.8970734%" y2="52.9192657%" id="linearGradient-1"> <stop stop-color="#000000" offset="0%"></stop> <stop stop-color="#000000" stop-opacity="0" offset="100%"></stop> </linearGradient> </defs> <g> <polygon fill="#47C5FB" points="157.665785 0.000549356223 0.000549356223 157.665785 48.8009614 206.466197 255.267708 0.000549356223"></polygon> <polygon fill="#47C5FB" points="156.567183 145.396793 72.1487107 229.815265 121.132608 279.530905 169.842925 230.820587 255.267818 145.396793"></polygon> <polygon fill="#00569E" points="121.133047 279.531124 158.214592 316.61267 255.267159 316.61267 169.842266 230.820807"></polygon> <polygon fill="#00B5F8" points="71.5995742 230.364072 120.401085 181.562561 169.842046 230.821136 121.132827 279.531454"></polygon> <polygon fill-opacity="0.8" fill="url(#linearGradient-1)" points="121.132827 279.531454 161.692896 266.072227 165.721875 234.941308"></polygon> </g> </svg>',
+    return ImageShape(
+      shape: shape,
+      border: border,
+      backgroundColor: backgroundColor,
+      padding: padding,
+      margin: margin,
+      colorFilter: colorFilter,
+      borderRadius: borderRadius,
+      child: SvgPicture.string(src),
     );
   }
 }
