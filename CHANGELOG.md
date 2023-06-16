@@ -16,4 +16,12 @@ code lint
 
 code comments
 
+## 0.1.0
+
+dependencies update
+
+added errorWidget
+
+added code comments
+
 
