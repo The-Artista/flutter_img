@@ -39,8 +39,12 @@ class _MyHomePageState extends State<MyHomePage> {
         child: ListView(
           children: [
 
-            Img('https://raw.githubusercontent.com/shafi-org/portfolio/master/src/assets/flutter-svgrepo-com.svg'),
-            Img('https://miro.medium.com/v2/resize:fit:4800/0*bDz2chibrm3B6QZE'),
+            Img('https://raw.githubusercontent.com/shafi-org/portfolio/master/src/assets/flutter-svgrepo-com.svg',height: 200, width: 200,
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Img('https://miro.medium.com/v2/resize:fit:4800/0*bDz2chibrm3B6QZE',height: 200,width: 200),
             Img('assets/images/lockup_flutter_horizontal.png'),
             Img('assets/images/flutter-svgrepo-com.svg'),
 /*

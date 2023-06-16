@@ -25,6 +25,7 @@ class Img extends StatelessWidget {
     this.height,
     this.blurHash,
     this.placeholder,
+    this.errorWidget,
     this.width,
     this.shape,
     this.border,
@@ -80,6 +81,11 @@ class Img extends StatelessWidget {
   /// jpg/jpeg network images. asset images or SVG images will not be affected
   final Widget? placeholder;
 
+  /// The errorWidget parameter allows you to
+  /// provide any widget that will visible  if network request failed
+  /// or any error happened during loading image
+  final Widget? errorWidget;
+
   /// The blurHash parameter also allows you to load blurhash
   /// images before the network image is fully loaded.
   /// this parameter only works with png, jpg/jpeg network images.
@@ -102,6 +108,9 @@ class Img extends StatelessWidget {
         backgroundColor: bgColor,
         border: border,
         shape: shape,
+        blurHash: blurHash,
+        placeholder: placeholder,
+        errorWidget: errorWidget,
       );
     } else {
       return AssetImagehandeler(

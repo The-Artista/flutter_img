@@ -32,7 +32,9 @@ class AssetImagehandeler extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (_getFileExtension(src) == '.png' || _getFileExtension(src) == '.jpg' || _getFileExtension(src) == '.jpeg') {
+    if (_getFileExtension(src) == '.png' ||
+        _getFileExtension(src) == '.jpg' ||
+        _getFileExtension(src) == '.jpeg') {
       return _buildImage();
     }
     return _buildSvgImage();
@@ -57,7 +59,8 @@ class AssetImagehandeler extends StatelessWidget {
       future: completer.future,
       builder: (BuildContext context, AsyncSnapshot<ui.Image> snapshot) {
         if (snapshot.hasData) {
-          final ratio = MediaQuery.of(context).size.width / snapshot.data!.width;
+          final ratio =
+              MediaQuery.of(context).size.width / snapshot.data!.width;
           calWidth = ratio * snapshot.data!.width;
           calHeight = ratio * snapshot.data!.height;
         }
@@ -82,6 +85,18 @@ class AssetImagehandeler extends StatelessWidget {
   }
 
   Widget _buildSvgImage() {
+    if (_getFileExtension(src) == '.svg') {
+      return ImageShape(
+        shape: shape,
+        border: border,
+        backgroundColor: backgroundColor,
+        padding: padding,
+        margin: margin,
+        colorFilter: colorFilter,
+        borderRadius: borderRadius,
+        child: SvgPicture.asset(src),
+      );
+    }
     return ImageShape(
       shape: shape,
       border: border,

@@ -17,6 +17,7 @@ class NetworkImagehandeler extends StatefulWidget {
     this.width,
     this.height,
     this.errorWidget,
+    this.blurHash,
     this.fadeDuration = const Duration(milliseconds: 300),
     this.border,
     this.padding,
@@ -29,6 +30,7 @@ class NetworkImagehandeler extends StatefulWidget {
   final String src;
   final Widget? placeholder;
   final Widget? errorWidget;
+  final String? blurHash;
   final double? width;
   final double? height;
   final Duration? fadeDuration;
@@ -58,9 +60,11 @@ class NetworkImagehandeler extends StatefulWidget {
   static String _generateKeyFromUrl(String url) => url.split('?').first;
 }
 
-class _NetworkImagehandelerState extends State<NetworkImagehandeler> with SingleTickerProviderStateMixin {
+class _NetworkImagehandelerState extends State<NetworkImagehandeler>
+    with SingleTickerProviderStateMixin {
   bool _isLoading = false;
   bool _isError = false;
+  bool isPlaceholderLoaded = false;
   File? _imageFile;
   late String _cacheKey;
 
@@ -133,26 +137,36 @@ class _NetworkImagehandelerState extends State<NetworkImagehandeler> with Single
   }
 
   Widget _buildImage() {
-    if (_isLoading) return _buildPlaceholderWidget();
+    if (_isLoading) {
+      return _buildPlaceholderWidget();
+    }
 
     if (_isError) return _buildErrorWidget();
-
     return FadeTransition(
       opacity: _animation,
       child: _returnImage(),
     );
   }
 
-  Widget _buildPlaceholderWidget() => Center(
+  Widget _buildPlaceholderWidget() {
+    return Center(
+      child: SizedBox(
+        height: widget.height ?? 200,
+        width: widget.width ?? 200,
         child: widget.placeholder ??
-            SizedBox(
-              width: widget.width ?? 200,
-              height: widget.height ?? 200,
-              child: const BlurHash(hash: 'L5H2EC=PM+yV0g-mq.wG9c010J}I'),
+            BlurHash(
+              hash: widget.blurHash ?? 'L5H2EC=PM+yV0g-mq.wG9c010J}I',
+            ),
+      ),
+    );
+  }
+
+  Widget _buildErrorWidget() => Center(
+        child: widget.errorWidget ??
+            const SizedBox(
+              child: Text('Error loading Image'),
             ),
       );
-
-  Widget _buildErrorWidget() => Center(child: widget.errorWidget ?? const SizedBox());
 
   Widget _buildSVGImage() {
     return ImageShape(
@@ -198,7 +212,8 @@ class _NetworkImagehandelerState extends State<NetworkImagehandeler> with Single
       future: completer.future,
       builder: (BuildContext context, AsyncSnapshot<ui.Image> snapshot) {
         if (snapshot.hasData) {
-          final ratio = MediaQuery.of(context).size.width / snapshot.data!.width;
+          final ratio =
+              MediaQuery.of(context).size.width / snapshot.data!.width;
           calWidth = ratio * snapshot.data!.width;
           calHeight = ratio * snapshot.data!.height;
         }
