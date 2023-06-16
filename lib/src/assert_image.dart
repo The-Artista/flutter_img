@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_img/src/shapes.dart';
 import 'package:flutter_svg/svg.dart';
 
-class AssetImagehandeler extends StatelessWidget {
-  const AssetImagehandeler(
+/// [AssetImageHandler] will handel asset image
+class AssetImageHandler extends StatelessWidget {
+  /// for [AssetImageHandler], [AssetImageHandler.src] is required
+  const AssetImageHandler(
     this.src, {
     super.key,
     this.height,
@@ -19,15 +21,38 @@ class AssetImagehandeler extends StatelessWidget {
     this.backgroundColor,
   });
 
+  /// `src` is the asset image source for [AssetImageHandler].
   final String src;
+
+  /// `height` explicitly set image height. you can pass a
+  /// height value or it will adjust the height based on image
+  /// height and screen height
   final double? height;
+
+  /// `width` explicitly set image width.
+  /// you can pass a height value or it will adjust the width
+  /// based on image width and screen width
   final double? width;
+
+  /// The shape parameter can be used to change the shape of the image.
   final BoxShape? shape;
+
+  /// backgroundColor will set the background color of the image
   final Color? backgroundColor;
+
+  /// The border parameter can be used to add the shape of the image.
   final BoxBorder? border;
+
+  /// the padding of the image
   final EdgeInsetsGeometry? padding;
+
+  /// the margin of the image
   final EdgeInsetsGeometry? margin;
+
+  /// using borderRadius You can add a border to the image
   final BorderRadiusGeometry? borderRadius;
+
+  /// The colorFilter allow you to set a color filter over the image
   final ColorFilter? colorFilter;
 
   @override

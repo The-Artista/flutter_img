@@ -38,16 +38,6 @@ class _MyHomePageState extends State<MyHomePage> {
         padding: const EdgeInsets.all(8.0),
         child: ListView(
           children: [
-
-            Img('https://raw.githubusercontent.com/shafi-org/portfolio/master/src/assets/flutter-svgrepo-com.svg',height: 200, width: 200,
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Img('https://miro.medium.com/v2/resize:fit:4800/0*bDz2chibrm3B6QZE',height: 200,width: 200),
-            Img('assets/images/lockup_flutter_horizontal.png'),
-            Img('assets/images/flutter-svgrepo-com.svg'),
-/*
             const Img(
               'https://miro.medium.com/v2/resize:fit:4800/0*bDz2chibrm3B6QZE',
               fit: BoxFit.fill,
@@ -97,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Colors.grey,
                 BlendMode.saturation,
               ),
-            ),*//*
+            ),
             const Img(
               'https://miro.medium.com/v2/resize:fit:4800/0*bDz2chibrm3B6QZE',
               fit: BoxFit.fill,
@@ -147,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Colors.grey,
                 BlendMode.saturation,
               ),
-            ),*/
+            ),
           ],
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.

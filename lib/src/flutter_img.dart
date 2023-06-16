@@ -77,8 +77,7 @@ class Img extends StatelessWidget {
 
   /// The placeholder parameter allows you to
   /// provide any widget as a placeholder before the network image
-  /// is fully loaded. this parameter only works with png,
-  /// jpg/jpeg network images. asset images or SVG images will not be affected
+  /// is fully loaded.
   final Widget? placeholder;
 
   /// The errorWidget parameter allows you to
@@ -88,8 +87,7 @@ class Img extends StatelessWidget {
 
   /// The blurHash parameter also allows you to load blurhash
   /// images before the network image is fully loaded.
-  /// this parameter only works with png, jpg/jpeg network images.
-  /// asset images or SVG images will not be affected.
+  /// asset images not be affected.
   /// By default, if you don't provide placeholder blursh will apply.
   /// and the default value is L5H2EC=PM+yV0g-mq.wG9c010J}I
   final String? blurHash;
@@ -97,7 +95,7 @@ class Img extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (_getImageType() == 'network') {
-      return NetworkImagehandeler(
+      return NetworkImageHandler(
         src,
         width: width,
         height: height,
@@ -113,7 +111,7 @@ class Img extends StatelessWidget {
         errorWidget: errorWidget,
       );
     } else {
-      return AssetImagehandeler(
+      return AssetImageHandler(
         src,
         width: width,
         height: height,

@@ -9,9 +9,12 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_img/src/shapes.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class NetworkImagehandeler extends StatefulWidget {
-  NetworkImagehandeler(
+/// [NetworkImageHandler] will handel all network image
+class NetworkImageHandler extends StatefulWidget {
+  /// for [NetworkImageHandler], [NetworkImageHandler.src] is required
+  const NetworkImageHandler(
     this.src, {
+    super.key,
     this.placeholder,
     this.colorFilter,
     this.width,
@@ -27,40 +30,82 @@ class NetworkImagehandeler extends StatefulWidget {
     this.shape,
   });
 
+  /// `src` is the network image source for [NetworkImageHandler].
   final String src;
+
+  /// The placeholder parameter allows you to
+  /// provide any widget as a placeholder before the network image
+  /// is fully loaded.
   final Widget? placeholder;
+
+  /// The errorWidget parameter allows you to
+  /// provide any widget that will visible  if network request failed
+  /// or any error happened during loading image
   final Widget? errorWidget;
+
+  /// The blurHash parameter also allows you to load blurhash
+  /// images before the network image is fully loaded.
+  /// asset images not be affected.
+  /// By default, if you don't provide placeholder blursh will apply.
+  /// and the default value is L5H2EC=PM+yV0g-mq.wG9c010J}I
   final String? blurHash;
+
+  /// `width` explicitly set image width.
+  /// you can pass a height value or it will adjust the width
+  /// based on image width and screen width
   final double? width;
+
+  /// `height` explicitly set image height. you can pass a
+  /// height value or it will adjust the height based on image
+  /// height and screen height
   final double? height;
+
+  /// transition time between placeholder and image
   final Duration? fadeDuration;
+
+  /// The colorFilter allow you to set a color filter over the image
   final ColorFilter? colorFilter;
+
+  /// The shape parameter can be used to change the shape of the image.
   final BoxShape? shape;
+
+  /// backgroundColor will set the background color of the image
   final Color? backgroundColor;
+
+  /// The border parameter can be used to add the shape of the image.
   final BoxBorder? border;
+
+  /// the padding of the image
   final EdgeInsetsGeometry? padding;
+
+  /// the margin of the image
   final EdgeInsetsGeometry? margin;
+
+  /// using borderRadius You can add a border to the image
   final BorderRadiusGeometry? borderRadius;
 
   @override
-  State<NetworkImagehandeler> createState() => _NetworkImagehandelerState();
+  State<NetworkImageHandler> createState() => _NetworkImageHandlerState();
 
+  /// create a cached image
   static Future<void> preCache(String imageUrl) {
     final key = _generateKeyFromUrl(imageUrl);
     return DefaultCacheManager().downloadFile(key);
   }
 
+  /// clear specific image cache by image url
   static Future<void> clearCacheForUrl(String imageUrl) {
     final key = _generateKeyFromUrl(imageUrl);
     return DefaultCacheManager().removeFile(key);
   }
 
+  /// clear Cache
   static Future<void> clearCache() => DefaultCacheManager().emptyCache();
 
   static String _generateKeyFromUrl(String url) => url.split('?').first;
 }
 
-class _NetworkImagehandelerState extends State<NetworkImagehandeler>
+class _NetworkImageHandlerState extends State<NetworkImageHandler>
     with SingleTickerProviderStateMixin {
   bool _isLoading = false;
   bool _isError = false;
@@ -74,7 +119,7 @@ class _NetworkImagehandelerState extends State<NetworkImagehandeler>
 
   @override
   void initState() {
-    _cacheKey = NetworkImagehandeler._generateKeyFromUrl(widget.src);
+    _cacheKey = NetworkImageHandler._generateKeyFromUrl(widget.src);
     super.initState();
     _cacheManager = DefaultCacheManager();
     _controller = AnimationController(
