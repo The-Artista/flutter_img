@@ -1,12 +1,14 @@
-## 0.0.1
+## 0.1.0+1
 
-ChangeLog starts here.
+border radius issue fixed
 
-## 0.0.2
+## 0.1.0
 
-doc updated
+dependencies update
 
-fixed network svg image problem
+added errorWidget
+
+added code comments
 
 ## 0.0.3
 
@@ -16,12 +18,19 @@ code lint
 
 code comments
 
-## 0.1.0
+## 0.0.2
 
-dependencies update
+doc updated
 
-added errorWidget
+fixed network svg image problem
 
-added code comments
+## 0.0.1
+
+ChangeLog starts here.
+
+
+
+
+
 
 
