@@ -74,9 +74,9 @@ class ImageShape extends StatelessWidget {
               aspectRatio: 1,
               child: colorFilter != null
                   ? ColorFiltered(
-                      colorFilter: colorFilter!,
-                      child: child,
-                    )
+                colorFilter: colorFilter!,
+                child: child,
+              )
                   : child,
             ),
           ),
@@ -94,12 +94,15 @@ class ImageShape extends StatelessWidget {
           color: backgroundColor,
           borderRadius: borderRadius,
         ),
-        child: colorFilter != null
-            ? ColorFiltered(
-                colorFilter: colorFilter!,
-                child: child,
-              )
-            : child,
+        child: ClipRRect(
+          borderRadius: borderRadius ?? BorderRadius.zero,
+          child: colorFilter != null
+              ? ColorFiltered(
+            colorFilter: colorFilter!,
+            child: child,
+          )
+              : child,
+        ),
       ),
     );
   }
