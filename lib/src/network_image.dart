@@ -198,10 +198,13 @@ class _NetworkImageHandlerState extends State<NetworkImageHandler>
       child: SizedBox(
         height: widget.height ?? 200,
         width: widget.width ?? 200,
-        child: widget.placeholder ??
-            BlurHash(
-              hash: widget.blurHash ?? 'L5H2EC=PM+yV0g-mq.wG9c010J}I',
-            ),
+        child: ClipRRect(
+          borderRadius: widget.borderRadius ?? BorderRadius.zero,
+          child: widget.placeholder ??
+              BlurHash(
+                hash: widget.blurHash ?? 'L5H2EC=PM+yV0g-mq.wG9c010J}I',
+              ),
+        ),
       ),
     );
   }

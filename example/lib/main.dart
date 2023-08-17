@@ -50,6 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
               'https://raw.githubusercontent.com/shafi-org/portfolio/master/src/assets/flutter-svgrepo-com.svg',
               width: 300,
               height: 300,
+              borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
             const Divider(),
             const Img(
