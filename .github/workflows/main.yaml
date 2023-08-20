@@ -68,6 +68,7 @@ jobs:
           path: ${{inputs.working_directory}}/coverage/lcov.info
           exclude: ${{inputs.coverage_excludes}}
           min_coverage: ${{inputs.min_coverage}}
+
       - name: Publish to pub.dev 🚀
         run: |
           mkdir -p $HOME/.config/dart
