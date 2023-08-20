@@ -14,11 +14,10 @@ dependencies:
 
 
 dev_dependencies:
-  flutter_lints: ^2.0.0
+  lint:
   flutter_test:
     sdk: flutter
-  lint:
-
+  flutter_lints: ^2.0.0
 
 
 flutter:
