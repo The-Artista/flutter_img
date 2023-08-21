@@ -1,4 +1,4 @@
-name: flutter_img
+name: ci
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -19,6 +19,12 @@ jobs:
       includes: "**/*.md"
       modified_files_only: false
 
+  build:
+    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
+    with:
+      flutter_channel: stable
+
   publish:
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_pub_publish.yml@v1
-
+    with:
+      flutter_channel: stable
