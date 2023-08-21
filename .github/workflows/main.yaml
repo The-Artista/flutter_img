@@ -19,18 +19,13 @@ jobs:
       includes: "**/*.md"
       modified_files_only: false
 
-  build:
-    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
-    with:
-      flutter_channel: stable
+#  build:
+#    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
+#    with:
+#      flutter_channel: stable
 
   publish:
-    defaults:
-      run:
-        working-directory: ${{inputs.working_directory}}
-
-    runs-on: ${{inputs.runs_on}}
-
+    runs-on: ubuntu-latest
     steps:
       - name: 📚 Git Checkout
         uses: actions/checkout@v3
