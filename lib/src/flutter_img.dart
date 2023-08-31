@@ -22,6 +22,7 @@ class Img extends StatelessWidget {
   const Img(
     this.src, {
     super.key,
+    this.package,
     this.height,
     this.blurHash,
     this.placeholder,
@@ -40,6 +41,10 @@ class Img extends StatelessWidget {
   /// `src` is the image source for [Img].
   /// `src` string can be a asset or network.
   final String src;
+
+  /// `package` is the name of the package where the image is located.
+  /// It's only used for asset images
+  final String? package;
 
   /// `height` explicitly set image height. you can pass a
   /// height value or it will adjust the height based on image
@@ -113,6 +118,7 @@ class Img extends StatelessWidget {
     } else {
       return AssetImageHandler(
         src,
+        package: package,
         width: width,
         height: height,
         colorFilter: colorFilter,
