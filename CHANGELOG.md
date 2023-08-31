@@ -1,3 +1,8 @@
+## 0.1.3
+
+now you can pass package name for asset images. thanks to [Zigotote](https://github.com/Zigotote).
+[feat: add package for asset image #17](https://github.com/ishafiul/flutter_img/issues/17)
+
 ## 0.1.2+2
 
 minor
