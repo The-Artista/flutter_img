@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_img/src/shapes.dart';
 import 'package:flutter_svg/svg.dart';
@@ -10,6 +11,7 @@ class AssetImageHandler extends StatelessWidget {
   const AssetImageHandler(
     this.src, {
     super.key,
+    this.package,
     this.height,
     this.width,
     this.shape,
@@ -23,6 +25,10 @@ class AssetImageHandler extends StatelessWidget {
 
   /// `src` is the asset image source for [AssetImageHandler].
   final String src;
+
+  /// `package` is the name of the package where the image is located.
+  /// It's only used for asset images
+  final String? package;
 
   /// `height` explicitly set image height. you can pass a
   /// height value or it will adjust the height based on image
@@ -101,6 +107,7 @@ class AssetImageHandler extends StatelessWidget {
           backgroundColor: backgroundColor,
           child: Image.asset(
             src,
+            package: package,
             height: height ?? calHeight,
             width: width ?? calWidth,
           ),
@@ -119,7 +126,10 @@ class AssetImageHandler extends StatelessWidget {
         margin: margin,
         colorFilter: colorFilter,
         borderRadius: borderRadius,
-        child: SvgPicture.asset(src),
+        child: SvgPicture.asset(
+          src,
+          package: package,
+        ),
       );
     }
     return ImageShape(
