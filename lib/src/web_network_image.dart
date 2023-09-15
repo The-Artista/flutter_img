@@ -4,32 +4,33 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter_img/src/shapes.dart';
+import 'package:flutter_img/src/web_mime_type.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-/// [NetworkImageHandler] will handel all network image
-class NetworkImageHandler extends StatefulWidget {
-  /// for [NetworkImageHandler], [NetworkImageHandler.src] is required
-  const NetworkImageHandler(
-      this.src, {
-        super.key,
-        this.placeholder,
-        this.colorFilter,
-        this.width,
-        this.height,
-        this.errorWidget,
-        this.blurHash,
-        this.fadeDuration = const Duration(milliseconds: 300),
-        this.border,
-        this.padding,
-        this.margin,
-        this.borderRadius,
-        this.backgroundColor,
-        this.shape,
-      });
+/// [WebNetworkImageHandler] will handel all network image
+class WebNetworkImageHandler extends StatefulWidget {
+  /// for [WebNetworkImageHandler], [WebNetworkImageHandler.src] is required
+  const WebNetworkImageHandler(
+    this.src, {
+    super.key,
+    this.placeholder,
+    this.colorFilter,
+    this.width,
+    this.height,
+    this.errorWidget,
+    this.blurHash,
+    this.fadeDuration = const Duration(milliseconds: 300),
+    this.border,
+    this.padding,
+    this.margin,
+    this.borderRadius,
+    this.backgroundColor,
+    this.shape,
+  });
 
-  /// `src` is the network image source for [NetworkImageHandler].
+  /// `src` is the network image source for [WebNetworkImageHandler].
   final String src;
 
   /// The placeholder parameter allows you to
@@ -84,43 +85,21 @@ class NetworkImageHandler extends StatefulWidget {
   final BorderRadiusGeometry? borderRadius;
 
   @override
-  State<NetworkImageHandler> createState() => _NetworkImageHandlerState();
-
-  /// create a cached image
-  static Future<void> preCache(String imageUrl) {
-    final key = _generateKeyFromUrl(imageUrl);
-    return DefaultCacheManager().downloadFile(key);
-  }
-
-  /// clear specific image cache by image url
-  static Future<void> clearCacheForUrl(String imageUrl) {
-    final key = _generateKeyFromUrl(imageUrl);
-    return DefaultCacheManager().removeFile(key);
-  }
-
-  /// clear Cache
-  static Future<void> clearCache() => DefaultCacheManager().emptyCache();
-
-  static String _generateKeyFromUrl(String url) => url.split('?').first;
+  State<WebNetworkImageHandler> createState() => _WebNetworkImageHandlerState();
 }
 
-class _NetworkImageHandlerState extends State<NetworkImageHandler>
+class _WebNetworkImageHandlerState extends State<WebNetworkImageHandler>
     with SingleTickerProviderStateMixin {
   bool _isLoading = false;
   bool _isError = false;
   bool isPlaceholderLoaded = false;
-  dynamic _imageFile;
-  late String _cacheKey;
-
-  late final DefaultCacheManager _cacheManager;
   late final AnimationController _controller;
   late final Animation<double> _animation;
+  ImgFile? imgFile;
 
   @override
   void initState() {
-    _cacheKey = NetworkImageHandler._generateKeyFromUrl(widget.src);
     super.initState();
-    _cacheManager = DefaultCacheManager();
     _controller = AnimationController(
       vsync: this,
       duration: widget.fadeDuration,
@@ -133,11 +112,13 @@ class _NetworkImageHandlerState extends State<NetworkImageHandler>
     try {
       _setToLoadingAfter15MsIfNeeded();
 
-      var file = (await _cacheManager.getFileFromMemory(_cacheKey))?.file;
-
-      file ??= await _cacheManager.getSingleFile(widget.src, key: _cacheKey);
-
-      _imageFile = file;
+      final response = await http.get(
+        Uri.parse(
+          widget.src,
+        ),
+      );
+      final data = getFile(response);
+      imgFile = data;
       _isLoading = false;
 
       _setState();
@@ -154,14 +135,14 @@ class _NetworkImageHandlerState extends State<NetworkImageHandler>
   }
 
   void _setToLoadingAfter15MsIfNeeded() => Future.delayed(
-    const Duration(milliseconds: 15),
+        const Duration(milliseconds: 15),
         () {
-      if (!_isLoading && _imageFile == null && !_isError) {
-        _isLoading = true;
-        _setState();
-      }
-    },
-  );
+          if (!_isLoading && imgFile == null && !_isError) {
+            _isLoading = true;
+            _setState();
+          }
+        },
+      );
 
   void _setState() => mounted ? setState(() {}) : null;
 
@@ -206,11 +187,11 @@ class _NetworkImageHandlerState extends State<NetworkImageHandler>
   }
 
   Widget _buildErrorWidget() => Center(
-    child: widget.errorWidget ??
-        const SizedBox(
-          child: Text('Error loading Image'),
-        ),
-  );
+        child: widget.errorWidget ??
+            const SizedBox(
+              child: Text('Error loading Image'),
+            ),
+      );
 
   Widget _buildSVGImage() {
     return ImageShape(
@@ -221,17 +202,16 @@ class _NetworkImageHandlerState extends State<NetworkImageHandler>
       margin: widget.margin,
       colorFilter: widget.colorFilter,
       borderRadius: widget.borderRadius,
-      child: SvgPicture.file(
-        _imageFile!,
+      child: SvgPicture.memory(
+        imgFile!.file,
       ),
     );
   }
 
   Widget _returnImage() {
-    if (_imageFile == null) return const SizedBox();
-    if (_getFileExtension(_imageFile!.path) == '.svg') {
+    if (imgFile == null) return const SizedBox();
+    if (imgFile!.fileType == ImgMimeType.svg) {
       return _buildSVGImage();
-      //
     } else {
       return _buildNetworkImage();
     }
@@ -244,7 +224,7 @@ class _NetworkImageHandlerState extends State<NetworkImageHandler>
   Widget _buildNetworkImage() {
     double? calHeight = 0;
     double? calWidth = 0;
-    final image = Image.file(_imageFile!);
+    final image = Image.memory(imgFile!.file);
     final completer = Completer<ui.Image>();
     image.image.resolve(ImageConfiguration.empty).addListener(
       ImageStreamListener((ImageInfo info, bool _) {
@@ -272,8 +252,8 @@ class _NetworkImageHandlerState extends State<NetworkImageHandler>
           borderRadius: widget.borderRadius,
           colorFilter: widget.colorFilter,
           backgroundColor: widget.backgroundColor,
-          child: Image.file(
-            _imageFile!,
+          child: Image.memory(
+            imgFile!.file,
             height: widget.height ?? calHeight,
             width: widget.width ?? calWidth,
           ),

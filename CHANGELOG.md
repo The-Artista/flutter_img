@@ -1,3 +1,6 @@
+## 0.1.4
+- **FEAT**(networkimage): support for web 
+
 ## 0.1.3
 
 now you can pass package name for asset images. thanks to [Zigotote](https://github.com/Zigotote).
