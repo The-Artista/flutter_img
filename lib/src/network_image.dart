@@ -12,22 +12,22 @@ import 'package:flutter_svg/flutter_svg.dart';
 class NetworkImageHandler extends StatefulWidget {
   /// for [NetworkImageHandler], [NetworkImageHandler.src] is required
   const NetworkImageHandler(
-      this.src, {
-        super.key,
-        this.placeholder,
-        this.colorFilter,
-        this.width,
-        this.height,
-        this.errorWidget,
-        this.blurHash,
-        this.fadeDuration = const Duration(milliseconds: 300),
-        this.border,
-        this.padding,
-        this.margin,
-        this.borderRadius,
-        this.backgroundColor,
-        this.shape,
-      });
+    this.src, {
+    super.key,
+    this.placeholder,
+    this.colorFilter,
+    this.width,
+    this.height,
+    this.errorWidget,
+    this.blurHash,
+    this.fadeDuration = const Duration(milliseconds: 300),
+    this.border,
+    this.padding,
+    this.margin,
+    this.borderRadius,
+    this.backgroundColor,
+    this.shape,
+  });
 
   /// `src` is the network image source for [NetworkImageHandler].
   final String src;
@@ -154,14 +154,14 @@ class _NetworkImageHandlerState extends State<NetworkImageHandler>
   }
 
   void _setToLoadingAfter15MsIfNeeded() => Future.delayed(
-    const Duration(milliseconds: 15),
+        const Duration(milliseconds: 15),
         () {
-      if (!_isLoading && _imageFile == null && !_isError) {
-        _isLoading = true;
-        _setState();
-      }
-    },
-  );
+          if (!_isLoading && _imageFile == null && !_isError) {
+            _isLoading = true;
+            _setState();
+          }
+        },
+      );
 
   void _setState() => mounted ? setState(() {}) : null;
 
@@ -206,11 +206,11 @@ class _NetworkImageHandlerState extends State<NetworkImageHandler>
   }
 
   Widget _buildErrorWidget() => Center(
-    child: widget.errorWidget ??
-        const SizedBox(
-          child: Text('Error loading Image'),
-        ),
-  );
+        child: widget.errorWidget ??
+            const SizedBox(
+              child: Text('Error loading Image'),
+            ),
+      );
 
   Widget _buildSVGImage() {
     return ImageShape(
