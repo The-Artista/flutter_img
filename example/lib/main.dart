@@ -37,8 +37,15 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListView(
-          children: [
-            const Img(
+          children: const [
+            Img(
+              'https://miro.medium.com/v2/resize:fit:4800/0*bDz2chibrm3B6QZE',
+              fit: BoxFit.fill,
+              height: 200,
+              width: 300,
+              blurHash: 'LGSF|mNH~U?G-oR+Rkt6^%xZD+Ip',
+            ),
+           /* const Img(
               'https://miro.medium.com/v2/resize:fit:4800/0*bDz2chibrm3B6QZE',
               fit: BoxFit.fill,
               height: 200,
@@ -137,7 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Colors.grey,
                 BlendMode.saturation,
               ),
-            ),
+            ),*/
           ],
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.

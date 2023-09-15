@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_img/src/assert_image.dart';
 import 'package:flutter_img/src/network_image.dart';
+import 'package:flutter_img/src/web_network_image.dart';
 
 ///
 /// A widget that renders your images
@@ -99,7 +101,11 @@ class Img extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     if (_getImageType() == 'network') {
+      if(kIsWeb){
+        return WebNetworkImageHandler(src);
+      }
       return NetworkImageHandler(
         src,
         width: width,
@@ -115,21 +121,21 @@ class Img extends StatelessWidget {
         placeholder: placeholder,
         errorWidget: errorWidget,
       );
-    } else {
-      return AssetImageHandler(
-        src,
-        package: package,
-        width: width,
-        height: height,
-        colorFilter: colorFilter,
-        borderRadius: borderRadius,
-        margin: margin,
-        padding: padding,
-        backgroundColor: bgColor,
-        border: border,
-        shape: shape,
-      );
+
     }
+    return AssetImageHandler(
+      src,
+      package: package,
+      width: width,
+      height: height,
+      colorFilter: colorFilter,
+      borderRadius: borderRadius,
+      margin: margin,
+      padding: padding,
+      backgroundColor: bgColor,
+      border: border,
+      shape: shape,
+    );
   }
 
   String _getImageType() {

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -110,7 +109,7 @@ class _NetworkImageHandlerState extends State<NetworkImageHandler>
   bool _isLoading = false;
   bool _isError = false;
   bool isPlaceholderLoaded = false;
-  File? _imageFile;
+  dynamic _imageFile;
   late String _cacheKey;
 
   late final DefaultCacheManager _cacheManager;
@@ -126,7 +125,7 @@ class _NetworkImageHandlerState extends State<NetworkImageHandler>
       vsync: this,
       duration: widget.fadeDuration,
     );
-    _animation = Tween(begin: 0.0, end: 1.0).animate(_controller);
+    _animation = Tween(begin: 0, end: 1).animate(_controller);
     _loadImage();
   }
 
@@ -143,7 +142,7 @@ class _NetworkImageHandlerState extends State<NetworkImageHandler>
 
       _setState();
 
-      await _controller.forward();
+      _controller.forward();
     } catch (e) {
       log('CachedNetworkSVGImage: $e');
 
