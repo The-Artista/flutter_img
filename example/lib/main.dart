@@ -39,7 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: ListView(
           children: const [
             Img(
-              'https://miro.medium.com/v2/resize:fit:4800/0*bDz2chibrm3B6QZE',
+              'assets/images/lockup_flutter_horizontal.png',
               fit: BoxFit.fill,
               height: 200,
               width: 300,

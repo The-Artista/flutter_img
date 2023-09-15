@@ -1,8 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_img/src/assert_image.dart';
 import 'package:flutter_img/src/network_image.dart';
-import 'package:flutter_img/src/web_network_image.dart';
 
 ///
 /// A widget that renders your images
@@ -21,8 +19,7 @@ class Img extends StatelessWidget {
   /// or SVG code as a string. as you know it takes a string,
   /// so for SVG code make sure there is no new line.
   ///
-  const Img(
-    this.src, {
+  const Img(this.src, {
     super.key,
     this.package,
     this.height,
@@ -99,13 +96,18 @@ class Img extends StatelessWidget {
   /// and the default value is L5H2EC=PM+yV0g-mq.wG9c010J}I
   final String? blurHash;
 
+  /// Checks if the image is a network image.
+  bool get _isNetwork {
+    final httpRegX = RegExp(
+      r'^(http|https)?:\/\/(.*)',
+    );
+    return httpRegX.hasMatch(src);
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (_isNetwork) {
 
-    if (_getImageType() == 'network') {
-      if(kIsWeb){
-        return WebNetworkImageHandler(src);
-      }
       return NetworkImageHandler(
         src,
         width: width,
@@ -121,7 +123,6 @@ class Img extends StatelessWidget {
         placeholder: placeholder,
         errorWidget: errorWidget,
       );
-
     }
     return AssetImageHandler(
       src,
@@ -136,16 +137,5 @@ class Img extends StatelessWidget {
       border: border,
       shape: shape,
     );
-  }
-
-  String _getImageType() {
-    final httpRegX = RegExp(
-      r'^(http|https)?:\/\/(.*)',
-    );
-    if (httpRegX.hasMatch(src)) {
-      return 'network';
-    } else {
-      return 'asset';
-    }
   }
 }
