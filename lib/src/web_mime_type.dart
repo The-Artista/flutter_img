@@ -33,8 +33,8 @@ ImgFile getFile(Response response) {
 enum ImgMimeType { svg, png, jpg, jpeg, gif, notValid }
 
 class ImgFile {
-
   ImgFile({required this.fileType, required this.file});
+
   ImgMimeType fileType;
   Uint8List file;
 }

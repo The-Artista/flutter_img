@@ -4,10 +4,10 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_img/src/shapes.dart';
 import 'package:flutter_img/src/web_mime_type.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart' as http;
 
 /// [WebNetworkImageHandler] will handel all network image
 class WebNetworkImageHandler extends StatefulWidget {
@@ -215,10 +215,6 @@ class _WebNetworkImageHandlerState extends State<WebNetworkImageHandler>
     } else {
       return _buildNetworkImage();
     }
-  }
-
-  String _getFileExtension(String fileName) {
-    return ".${fileName.split('.').last}";
   }
 
   Widget _buildNetworkImage() {
