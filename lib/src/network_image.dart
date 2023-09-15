@@ -2,35 +2,32 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:ui' as ui;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_img/src/shapes.dart';
-import 'package:flutter_img/src/web_mime_type.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:http/http.dart' as http;
 
 /// [NetworkImageHandler] will handel all network image
 class NetworkImageHandler extends StatefulWidget {
   /// for [NetworkImageHandler], [NetworkImageHandler.src] is required
   const NetworkImageHandler(
-    this.src, {
-    super.key,
-    this.placeholder,
-    this.colorFilter,
-    this.width,
-    this.height,
-    this.errorWidget,
-    this.blurHash,
-    this.fadeDuration = const Duration(milliseconds: 300),
-    this.border,
-    this.padding,
-    this.margin,
-    this.borderRadius,
-    this.backgroundColor,
-    this.shape,
-  });
+      this.src, {
+        super.key,
+        this.placeholder,
+        this.colorFilter,
+        this.width,
+        this.height,
+        this.errorWidget,
+        this.blurHash,
+        this.fadeDuration = const Duration(milliseconds: 300),
+        this.border,
+        this.padding,
+        this.margin,
+        this.borderRadius,
+        this.backgroundColor,
+        this.shape,
+      });
 
   /// `src` is the network image source for [NetworkImageHandler].
   final String src;
@@ -112,7 +109,6 @@ class _NetworkImageHandlerState extends State<NetworkImageHandler>
   bool _isLoading = false;
   bool _isError = false;
   bool isPlaceholderLoaded = false;
-  ImgFile? imgFile;
   dynamic _imageFile;
   late String _cacheKey;
 
@@ -122,16 +118,14 @@ class _NetworkImageHandlerState extends State<NetworkImageHandler>
 
   @override
   void initState() {
+    _cacheKey = NetworkImageHandler._generateKeyFromUrl(widget.src);
     super.initState();
     _cacheManager = DefaultCacheManager();
     _controller = AnimationController(
       vsync: this,
       duration: widget.fadeDuration,
     );
-    if (!kIsWeb) {
-      _cacheKey = NetworkImageHandler._generateKeyFromUrl(widget.src);
-    }
-    _animation = Tween(begin: 0.0, end: 0.1).animate(_controller);
+    _animation = Tween(begin: 0.0, end: 1.0).animate(_controller);
     _loadImage();
   }
 
@@ -139,28 +133,18 @@ class _NetworkImageHandlerState extends State<NetworkImageHandler>
     try {
       _setToLoadingAfter15MsIfNeeded();
 
-      if (!kIsWeb) {
-        var file = (await _cacheManager.getFileFromMemory(_cacheKey))?.file;
+      var file = (await _cacheManager.getFileFromMemory(_cacheKey))?.file;
 
-        file ??= await _cacheManager.getSingleFile(widget.src, key: _cacheKey);
-        _imageFile = file;
-      } else {
-        final response = await http.get(
-          Uri.parse(
-            widget.src,
-          ),
-        );
-        final data = getFile(response);
-        imgFile = data;
-      }
+      file ??= await _cacheManager.getSingleFile(widget.src, key: _cacheKey);
 
+      _imageFile = file;
       _isLoading = false;
 
       _setState();
 
-      _controller.forward();
+      await _controller.forward();
     } catch (e) {
-      log('flutter_img: something not good!: $e');
+      log('CachedNetworkSVGImage: $e');
 
       _isError = true;
       _isLoading = false;
@@ -170,14 +154,14 @@ class _NetworkImageHandlerState extends State<NetworkImageHandler>
   }
 
   void _setToLoadingAfter15MsIfNeeded() => Future.delayed(
-        const Duration(milliseconds: 15),
+    const Duration(milliseconds: 15),
         () {
-          if (!_isLoading && _imageFile == null && !_isError) {
-            _isLoading = true;
-            _setState();
-          }
-        },
-      );
+      if (!_isLoading && _imageFile == null && !_isError) {
+        _isLoading = true;
+        _setState();
+      }
+    },
+  );
 
   void _setState() => mounted ? setState(() {}) : null;
 
@@ -222,11 +206,11 @@ class _NetworkImageHandlerState extends State<NetworkImageHandler>
   }
 
   Widget _buildErrorWidget() => Center(
-        child: widget.errorWidget ??
-            const SizedBox(
-              child: Text('Error loading Image'),
-            ),
-      );
+    child: widget.errorWidget ??
+        const SizedBox(
+          child: Text('Error loading Image'),
+        ),
+  );
 
   Widget _buildSVGImage() {
     return ImageShape(
@@ -237,13 +221,9 @@ class _NetworkImageHandlerState extends State<NetworkImageHandler>
       margin: widget.margin,
       colorFilter: widget.colorFilter,
       borderRadius: widget.borderRadius,
-      child: kIsWeb
-          ? SvgPicture.memory(
-              imgFile!.file,
-            )
-          : SvgPicture.file(
-              _imageFile!,
-            ),
+      child: SvgPicture.file(
+        _imageFile!,
+      ),
     );
   }
 
@@ -264,12 +244,7 @@ class _NetworkImageHandlerState extends State<NetworkImageHandler>
   Widget _buildNetworkImage() {
     double? calHeight = 0;
     double? calWidth = 0;
-    Image image;
-    if (kIsWeb) {
-      image = Image.memory(imgFile!.file);
-    } else {
-      image = Image.file(_imageFile!);
-    }
+    final image = Image.file(_imageFile!);
     final completer = Completer<ui.Image>();
     image.image.resolve(ImageConfiguration.empty).addListener(
       ImageStreamListener((ImageInfo info, bool _) {
@@ -297,17 +272,11 @@ class _NetworkImageHandlerState extends State<NetworkImageHandler>
           borderRadius: widget.borderRadius,
           colorFilter: widget.colorFilter,
           backgroundColor: widget.backgroundColor,
-          child: kIsWeb
-              ? Image.memory(
-                  imgFile!.file,
-                  height: widget.height ?? calHeight,
-                  width: widget.width ?? calWidth,
-                )
-              : Image.file(
-                  _imageFile!,
-                  height: widget.height ?? calHeight,
-                  width: widget.width ?? calWidth,
-                ),
+          child: Image.file(
+            _imageFile!,
+            height: widget.height ?? calHeight,
+            width: widget.width ?? calWidth,
+          ),
         );
       },
     );

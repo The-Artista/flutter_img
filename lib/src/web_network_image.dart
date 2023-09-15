@@ -2,19 +2,17 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:ui' as ui;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter_img/src/shapes.dart';
 import 'package:flutter_img/src/web_mime_type.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:http/http.dart' as http;
 
-/// [NetworkImageHandler] will handel all network image
-class NetworkImageHandler extends StatefulWidget {
-  /// for [NetworkImageHandler], [NetworkImageHandler.src] is required
-  const NetworkImageHandler(
+/// [WebNetworkImageHandler] will handel all network image
+class WebNetworkImageHandler extends StatefulWidget {
+  /// for [WebNetworkImageHandler], [WebNetworkImageHandler.src] is required
+  const WebNetworkImageHandler(
     this.src, {
     super.key,
     this.placeholder,
@@ -32,7 +30,7 @@ class NetworkImageHandler extends StatefulWidget {
     this.shape,
   });
 
-  /// `src` is the network image source for [NetworkImageHandler].
+  /// `src` is the network image source for [WebNetworkImageHandler].
   final String src;
 
   /// The placeholder parameter allows you to
@@ -87,50 +85,26 @@ class NetworkImageHandler extends StatefulWidget {
   final BorderRadiusGeometry? borderRadius;
 
   @override
-  State<NetworkImageHandler> createState() => _NetworkImageHandlerState();
-
-  /// create a cached image
-  static Future<void> preCache(String imageUrl) {
-    final key = _generateKeyFromUrl(imageUrl);
-    return DefaultCacheManager().downloadFile(key);
-  }
-
-  /// clear specific image cache by image url
-  static Future<void> clearCacheForUrl(String imageUrl) {
-    final key = _generateKeyFromUrl(imageUrl);
-    return DefaultCacheManager().removeFile(key);
-  }
-
-  /// clear Cache
-  static Future<void> clearCache() => DefaultCacheManager().emptyCache();
-
-  static String _generateKeyFromUrl(String url) => url.split('?').first;
+  State<WebNetworkImageHandler> createState() => _WebNetworkImageHandlerState();
 }
 
-class _NetworkImageHandlerState extends State<NetworkImageHandler>
+class _WebNetworkImageHandlerState extends State<WebNetworkImageHandler>
     with SingleTickerProviderStateMixin {
   bool _isLoading = false;
   bool _isError = false;
   bool isPlaceholderLoaded = false;
-  ImgFile? imgFile;
-  late String _cacheKey;
-
-  late final DefaultCacheManager _cacheManager;
   late final AnimationController _controller;
   late final Animation<double> _animation;
+  ImgFile? imgFile;
 
   @override
   void initState() {
     super.initState();
-    _cacheManager = DefaultCacheManager();
     _controller = AnimationController(
       vsync: this,
       duration: widget.fadeDuration,
     );
-    if (!kIsWeb) {
-      _cacheKey = NetworkImageHandler._generateKeyFromUrl(widget.src);
-    }
-    _animation = Tween(begin: 0.0, end: 0.1).animate(_controller);
+    _animation = Tween(begin: 0.0, end: 1.0).animate(_controller);
     _loadImage();
   }
 
@@ -145,14 +119,13 @@ class _NetworkImageHandlerState extends State<NetworkImageHandler>
       );
       final data = getFile(response);
       imgFile = data;
-
       _isLoading = false;
 
       _setState();
 
-      _controller.forward();
+      await _controller.forward();
     } catch (e) {
-      log('flutter_img: something not good!: $e');
+      log('CachedNetworkSVGImage: $e');
 
       _isError = true;
       _isLoading = false;
@@ -164,7 +137,7 @@ class _NetworkImageHandlerState extends State<NetworkImageHandler>
   void _setToLoadingAfter15MsIfNeeded() => Future.delayed(
         const Duration(milliseconds: 15),
         () {
-          if (!_isLoading && imgFile?.file == null && !_isError) {
+          if (!_isLoading && imgFile == null && !_isError) {
             _isLoading = true;
             _setState();
           }
@@ -222,23 +195,23 @@ class _NetworkImageHandlerState extends State<NetworkImageHandler>
 
   Widget _buildSVGImage() {
     return ImageShape(
-        shape: widget.shape,
-        border: widget.border,
-        backgroundColor: widget.backgroundColor,
-        padding: widget.padding,
-        margin: widget.margin,
-        colorFilter: widget.colorFilter,
-        borderRadius: widget.borderRadius,
-        child: SvgPicture.memory(
-          imgFile!.file,
-        ));
+      shape: widget.shape,
+      border: widget.border,
+      backgroundColor: widget.backgroundColor,
+      padding: widget.padding,
+      margin: widget.margin,
+      colorFilter: widget.colorFilter,
+      borderRadius: widget.borderRadius,
+      child: SvgPicture.memory(
+        imgFile!.file,
+      ),
+    );
   }
 
   Widget _returnImage() {
-    if (imgFile?.file == null) return const SizedBox();
-    if (imgFile?.fileType == ImgMimeType.svg) {
+    if (imgFile == null) return const SizedBox();
+    if (imgFile!.fileType == ImgMimeType.svg) {
       return _buildSVGImage();
-      //
     } else {
       return _buildNetworkImage();
     }
@@ -270,20 +243,21 @@ class _NetworkImageHandlerState extends State<NetworkImageHandler>
         }
 
         return ImageShape(
+          height: widget.height ?? calHeight,
+          width: widget.width ?? calWidth,
+          shape: widget.shape,
+          border: widget.border,
+          padding: widget.padding,
+          margin: widget.margin,
+          borderRadius: widget.borderRadius,
+          colorFilter: widget.colorFilter,
+          backgroundColor: widget.backgroundColor,
+          child: Image.memory(
+            imgFile!.file,
             height: widget.height ?? calHeight,
             width: widget.width ?? calWidth,
-            shape: widget.shape,
-            border: widget.border,
-            padding: widget.padding,
-            margin: widget.margin,
-            borderRadius: widget.borderRadius,
-            colorFilter: widget.colorFilter,
-            backgroundColor: widget.backgroundColor,
-            child: Image.memory(
-              imgFile!.file,
-              height: widget.height ?? calHeight,
-              width: widget.width ?? calWidth,
-            ));
+          ),
+        );
       },
     );
   }
