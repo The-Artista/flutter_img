@@ -21,7 +21,8 @@ class Img extends StatelessWidget {
   /// or SVG code as a string. as you know it takes a string,
   /// so for SVG code make sure there is no new line.
   ///
-  const Img(this.src, {
+  const Img(
+    this.src, {
     super.key,
     this.package,
     this.height,
@@ -109,7 +110,7 @@ class Img extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (_isNetwork) {
-      if(kIsWeb){
+      if (kIsWeb) {
         return WebNetworkImageHandler(
           src,
           width: width,
