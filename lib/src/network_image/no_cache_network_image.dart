@@ -9,10 +9,10 @@ import 'package:flutter_img/src/web_mime_type.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 
-/// [WebNetworkImageHandler] will handel all network image
-class WebNetworkImageHandler extends StatefulWidget {
-  /// for [WebNetworkImageHandler], [WebNetworkImageHandler.src] is required
-  const WebNetworkImageHandler(
+/// [NetworkImageHandler] will handel all network image
+class NetworkImageHandler extends StatefulWidget {
+  /// for [NetworkImageHandler], [NetworkImageHandler.src] is required
+  const NetworkImageHandler(
     this.src, {
     super.key,
     this.placeholder,
@@ -30,7 +30,7 @@ class WebNetworkImageHandler extends StatefulWidget {
     this.shape,
   });
 
-  /// `src` is the network image source for [WebNetworkImageHandler].
+  /// `src` is the network image source for [NetworkImageHandler].
   final String src;
 
   /// The placeholder parameter allows you to
@@ -85,10 +85,10 @@ class WebNetworkImageHandler extends StatefulWidget {
   final BorderRadiusGeometry? borderRadius;
 
   @override
-  State<WebNetworkImageHandler> createState() => _WebNetworkImageHandlerState();
+  State<NetworkImageHandler> createState() => _NetworkImageHandlerState();
 }
 
-class _WebNetworkImageHandlerState extends State<WebNetworkImageHandler>
+class _NetworkImageHandlerState extends State<NetworkImageHandler>
     with SingleTickerProviderStateMixin {
   bool _isLoading = false;
   bool _isError = false;
