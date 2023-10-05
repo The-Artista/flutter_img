@@ -18,3 +18,17 @@ jobs:
     with:
       includes: "**/*.md"
       modified_files_only: false
+  change_version:
+    name: change_version
+    runs-on: ubuntu-latest
+    steps:
+      - name: change version number
+        run: |
+          set -e
+
+          # Find and increment the version number.
+            perl -i -pe 's/^(version:\s+\d+\.\d+\.\d+\+)(\d+)$/$1.($2+1)/e' ./pubspec.yaml
+
+          # Commit and tag this change.
+          git add pubspec.yaml
+          chmod +x .git/hooks/pre-commit
