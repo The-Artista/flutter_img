@@ -31,7 +31,6 @@ jobs:
 
       - name: 📦 Install Dependencies
         run: |
-          export PATH="$PATH":"$HOME/.pub-cache/bin"
           pub global activate cider
           cider release
           cider version ${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}+${{ env.NUMBER_OF_COMMITS }}
