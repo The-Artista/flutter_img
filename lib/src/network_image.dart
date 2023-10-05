@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
+import 'package:flutter_cache_manager/file.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_img/src/shapes.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -109,7 +110,7 @@ class _NetworkImageHandlerState extends State<NetworkImageHandler>
   bool _isLoading = false;
   bool _isError = false;
   bool isPlaceholderLoaded = false;
-  dynamic _imageFile;
+  File? _imageFile;
   late String _cacheKey;
 
   late final DefaultCacheManager _cacheManager;
