@@ -215,6 +215,8 @@ class _NetworkImageHandlerState extends State<NetworkImageHandler>
 
   Widget _buildSVGImage() {
     return ImageShape(
+      height: widget.height,
+      width: widget.width,
       shape: widget.shape,
       border: widget.border,
       backgroundColor: widget.backgroundColor,
