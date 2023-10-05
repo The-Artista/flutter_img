@@ -23,9 +23,8 @@ jobs:
             perl -i -pe 's/^(version:\s+\d+\.\d+\.\d+\+)(\d+)$/$1.($2+1)/e' pubspec.yaml
           
           # Commit and tag this change.
-          version=`grep 'version: 'pubspec.yaml | sed 's/version: //'`
-            git commit -m "Bump version to $version" client/pubspec.yaml
-            git tag $version
+          git add pubspec.yaml
+          chmod +x .git/hooks/pre-commit
 
   publish:
     runs-on: ubuntu-latest
