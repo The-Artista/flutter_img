@@ -1,4 +1,4 @@
-name: ci
+name: publish
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -12,15 +12,49 @@ on:
 
 jobs:
   change_version:
-    name: test
+    name: change_version
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - id: read-version
-        uses: NiklasLehnfeld/flutter-version-number-action@main
+      - name: change version number
+        run: |
+          set -e
+
+          # Find and increment the version number.
+            perl -i -pe 's/^(version:\s+\d+\.\d+\.\d+\+)(\d+)$/$1.($2+1)/e' pubspec.yaml
+          
+          # Commit and tag this change.
+          version=`grep 'version: 'pubspec.yaml | sed 's/version: //'`
+            git commit -m "Bump version to $version" client/pubspec.yaml
+            git tag $version
+
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📚 Git Checkout
+        uses: actions/checkout@v4
+
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
-          file-path: pubspec.yaml
-      - uses: nick-invision/assert-action@v1
-        with:
-          expected: 0.1.4+4
-          actual: ${{ steps.read-version.outputs.version-number }}
+          flutter-version: ${{inputs.flutter_version}}
+          channel: ${{inputs.flutter_channel}}
+          cache: true
+
+      - name: 📦 Install Dependencies
+        run: flutter pub get
+
+      - name: 🔐 Setup Pub Credentials
+        run: |
+          mkdir -p $HOME/.config/dart
+          cat <<EOF > $HOME/.config/dart/pub-credentials.json
+          {
+            "accessToken": "${{ secrets.PUB_CREDS_ACCESS_TOKEN }}",
+            "refreshToken": "${{ secrets.PUB_CREDS_REFRESH_TOKEN }}",
+            "idToken": "${{ secrets.PUB_CREDS_ID_TOKEN }}",
+            "tokenEndpoint": "https://accounts.google.com/o/oauth2/token",
+            "scopes": [ "openid", "https://www.googleapis.com/auth/userinfo.email" ],
+            "expiration": ${{ secrets.PUB_CREDS_EXPIRATION }}
+          }
+
+      - name: 📢 Publish
+        run: flutter pub publish -f

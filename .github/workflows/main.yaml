@@ -1,4 +1,4 @@
-name: ci
+name: check_PR
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
