@@ -40,7 +40,7 @@ jobs:
           author_name: GitHub Actions
           author_email: actions@github.com
           # Change it to your own branch
-          branch: main
+          branch: release
           message: "Update version on pubspec.yaml & update change log"
           # Change it to your own branch
-          push: origin main --force
+          push: origin release --force
