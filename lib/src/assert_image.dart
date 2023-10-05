@@ -119,6 +119,8 @@ class AssetImageHandler extends StatelessWidget {
   Widget _buildSvgImage() {
     if (_getFileExtension(src) == '.svg') {
       return ImageShape(
+        height: height,
+        width: width,
         shape: shape,
         border: border,
         backgroundColor: backgroundColor,
@@ -133,6 +135,8 @@ class AssetImageHandler extends StatelessWidget {
       );
     }
     return ImageShape(
+      height: height,
+      width: width,
       shape: shape,
       border: border,
       backgroundColor: backgroundColor,
