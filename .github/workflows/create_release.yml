@@ -6,7 +6,7 @@ on:
 
 env:
   JAVA_VERSION: "18.x"
-  FLUTTER_VERSION: "stable"
+  FLUTTER_VERSION: "3.13.0"
   FLUTTER_CHANNEL: "stable"
 
 jobs:
