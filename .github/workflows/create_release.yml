@@ -1,4 +1,4 @@
-name: Updating_Code_Version
+name: 🚀 Publish New version
 on:
   push:
     tags:
@@ -11,7 +11,7 @@ env:
 
 jobs:
   update_code_version:
-    name: Updating the code version and commiting
+    name: 🚀 Publish New version
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -22,19 +22,19 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: ${{env.JAVA_VERSION}}
-      - name: 🐦 Setup Flutter
+      - name: 🔧 Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{inputs.flutter_version}}
           channel: ${{inputs.flutter_channel}}
           cache: true
 
-      - name: 📦 Install Dependencies
+      - name: 🔖 Generating new version and change log
         run: |
           flutter pub global activate cider
           cider release
           cider version ${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}+${{ env.NUMBER_OF_COMMITS }}
-      - name: Commit changes
+      - name: 🔀 Commit changes
         uses: EndBug/add-and-commit@v7
         with:
           author_name: GitHub Actions
@@ -44,3 +44,20 @@ jobs:
           message: "Update version on pubspec.yaml & update change log"
           # Change it to your own branch
           push: origin main --force
+
+
+      - name: 🔐 Setup Pub Credentials
+        run: |
+          mkdir -p $HOME/.config/dart
+          cat <<EOF > $HOME/.config/dart/pub-credentials.json
+          {
+            "accessToken": "${{ secrets.PUB_CREDS_ACCESS_TOKEN }}",
+            "refreshToken": "${{ secrets.PUB_CREDS_REFRESH_TOKEN }}",
+            "idToken": "${{ secrets.PUB_CREDS_ID_TOKEN }}",
+            "tokenEndpoint": "https://accounts.google.com/o/oauth2/token",
+            "scopes": [ "openid", "https://www.googleapis.com/auth/userinfo.email" ],
+            "expiration": ${{ secrets.PUB_CREDS_EXPIRATION }}
+          }
+
+      - name: 📢 Publish
+        run: flutter pub publish -f
