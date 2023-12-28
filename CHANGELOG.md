@@ -35,3 +35,24 @@ fixed network svg image problem
 
 ## v0.0.1
 ChangeLog starts here.
+
+## [0.1.6+148] - 2023-12-28
+### Changed
+- \## Build System
+- **deps:** bump EndBug/add-and-commit from 7 to 9
+- **deps:** bump actions/checkout from 2 to 4
+- **deps:** bump damienaicheh/extract-version-from-tag-action
+- **deps:** bump flutter\_blurhash from 0.7.0 to 0.8.2
+- **deps:** bump actions/setup-java from 1 to 4
+- commit
+- commit
+- commit
+- commit
+- commit
+- commit
+- commit
+- commit and changelog test
+- updated example code
+- Update README.md with flutter\_img package information and examples
+
+[0.1.6+148]: https://github.com/The-Artista/flutter_img/releases/tag/v0.1.6
