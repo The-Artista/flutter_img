@@ -34,16 +34,7 @@ jobs:
           flutter pub global activate cider
           cider release
           cider version ${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}+${{ env.NUMBER_OF_COMMITS }}
-      - name: 🔀 Commit changes
-        uses: EndBug/add-and-commit@v9.1.3
-        with:
-          author_name: GitHub Actions
-          author_email: actions@github.com
-          # Change it to your own branch
-          branch: main
-          message: "Update version on pubspec.yaml & update change log"
-          # Change it to your own branch
-          push: false
+      
 
 
       - name: 🔐 Setup Pub Credentials
