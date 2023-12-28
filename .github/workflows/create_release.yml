@@ -43,7 +43,7 @@ jobs:
           branch: main
           message: "Update version on pubspec.yaml & update change log"
           # Change it to your own branch
-          push: origin main --set-upstream --force
+          push: false
 
 
       - name: 🔐 Setup Pub Credentials
