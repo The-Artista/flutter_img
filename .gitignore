@@ -45,3 +45,4 @@ coverage
 # fvm
 .fvm/flutter_sdk
 
+/git.diff
