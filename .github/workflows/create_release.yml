@@ -33,7 +33,20 @@ jobs:
         run: |
           flutter pub global activate cider
           cider version ${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}+${{ env.NUMBER_OF_COMMITS }}
+      - name: Get changelog
+      - uses: actions/github@v4
+        id: get-tag-description
+        with:
+          ref: ${{ github.ref }}
+          # Optionally specify the tag name if needed
+          tag_name: ${{ github.ref_name }}
+
+      - name: Print tag description
+        run: |
+          echo ${{ steps.get-tag-description.outputs.tag.message }}
+          cider log changed ${{ steps.get-tag-description.outputs.tag.message }}
           cider release
+
       - name: Commit & Push changes
         uses: actions-js/push@master
         with:
@@ -51,6 +64,3 @@ jobs:
             "scopes": [ "openid", "https://www.googleapis.com/auth/userinfo.email" ],
             "expiration": ${{ secrets.PUB_CREDS_EXPIRATION }}
           }
-
-      - name: 📢 Publish
-        run: flutter pub publish -f
