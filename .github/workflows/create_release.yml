@@ -34,7 +34,7 @@ jobs:
           flutter pub global activate cider
           cider version ${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}+${{ env.NUMBER_OF_COMMITS }}
       - name: Get changelog
-      - uses: actions/github@v4
+        uses: actions/github@v4
         id: get-tag-description
         with:
           ref: ${{ github.ref }}
