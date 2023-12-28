@@ -42,5 +42,6 @@ jobs:
 
       - name: Print tag description
         run: |
-          echo ${{ steps.changelog.outputs.changes }}
+          cider log changed "${{ steps.changelog.outputs.changes }}"
+          cider release
 
