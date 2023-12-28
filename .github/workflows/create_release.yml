@@ -34,11 +34,11 @@ jobs:
           flutter pub global activate cider
           cider version ${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}
           cider release
-      - name: Push changes
-        uses: ad-m/github-push-action@master
+      - name: Commit & Push changes
+        uses: actions-js/push@master
         with:
           github_token: ${{ secrets.GITOKEN }}
-          branch: ${{ github.ref }}
+
       - name: 🔐 Setup Pub Credentials
         run: |
           mkdir -p $HOME/.config/dart
