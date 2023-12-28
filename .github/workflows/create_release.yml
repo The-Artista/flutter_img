@@ -34,17 +34,16 @@ jobs:
           flutter pub global activate cider
           cider version ${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}+${{ env.NUMBER_OF_COMMITS }}
       - name: Get changelog
-        uses: actions/github@v4
-        id: get-tag-description
+        id: changelog
+        uses: loopwerk/tag-changelog@v1
         with:
-          ref: ${{ github.ref }}
-          # Optionally specify the tag name if needed
-          tag_name: ${{ github.ref_name }}
+          token: ${{ secrets.GITOKEN }}
+          exclude_types: other,doc,chore
 
       - name: Print tag description
         run: |
-          echo ${{ steps.get-tag-description.outputs.tag.message }}
-          cider log changed ${{ steps.get-tag-description.outputs.tag.message }}
+          echo ${{ steps.changelog.outputs.changes }}
+          cider log changed ${{ steps.changelog.outputs.changes }}
           cider release
 
       - name: Commit & Push changes
