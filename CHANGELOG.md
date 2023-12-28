@@ -35,9 +35,3 @@ fixed network svg image problem
 
 ## v0.0.1
 ChangeLog starts here.
-
-## 0.1.6 - 2023-12-29
-### Fixed
-- Wheels falling off sporadically
-
-## 0.1.5 - 2023-12-29

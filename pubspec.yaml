@@ -1,6 +1,6 @@
 name: flutter_img
 description: Just another flutter image widget that can handel asset and network png,jpg and svg
-version: 0.1.6
+version: 0.1.5
 homepage: https://github.com/ishafiul/flutter_img
 repository: https://github.com/ishafiul/flutter_img
 
@@ -16,6 +16,11 @@ dependencies:
   flutter_svg: ^2.0.7
   http: ^1.1.0
   mime: ^1.0.4
+
+cider:
+  link_template:
+    tag: https://github.com/The-Artista/flutter_img/releases/tag/v0.1.6 # initial release link template
+    diff: https://github.com/The-Artista/flutter_img/compare/v0.1.5...v0.1.6 # subsequent releases link template
 
 dev_dependencies:
   flutter_test:
