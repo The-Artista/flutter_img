@@ -35,3 +35,6 @@ fixed network svg image problem
 
 ## v0.0.1
 ChangeLog starts here.
+
+## [0.1.6+135] - 2023-12-28
+[0.1.6+135]: https://github.com/The-Artista/flutter_img/releases/tag/v0.1.6
