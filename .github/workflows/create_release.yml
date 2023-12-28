@@ -2,7 +2,7 @@ name: 🚀 Publish New version
 on:
   push:
     tags:
-      - "0.0.0"
+      - "*"
 
 env:
   JAVA_VERSION: "18.x"
@@ -29,10 +29,9 @@ jobs:
           channel: ${{inputs.flutter_channel}}
           cache: true
 
-      - name: 🔖 Generating new version and change log
+      - name: Setup Cider
         run: |
           flutter pub global activate cider
-          cider version ${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}+${{ env.NUMBER_OF_COMMITS }}
       - name: Get changelog
         id: changelog
         uses: loopwerk/tag-changelog@v1
@@ -40,9 +39,9 @@ jobs:
           token: ${{ secrets.GITOKEN }}
           exclude_types: other,doc,chore
 
-      - name: Print tag description
+      - name: Generating new version and change log
         run: |
-          echo ${{ steps.changelog.outputs.changes }}
+          cider version ${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}+${{ env.NUMBER_OF_COMMITS }}
           cider log changed "${{ steps.changelog.outputs.changes }}"
           cider release
 
