@@ -43,6 +43,8 @@ app.*.map.json
 coverage
 
 # fvm
-.fvm/flutter_sdk
 
 /git.diff
+
+# FVM Version Cache
+.fvm/
