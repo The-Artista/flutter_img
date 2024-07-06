@@ -61,6 +61,7 @@ class AssetImageHandler extends StatelessWidget {
 
   /// The colorFilter allow you to set a color filter over the image
   final ColorFilter? colorFilter;
+  final BoxFit fit;
 
   @override
   Widget build(BuildContext context) {
@@ -111,6 +112,7 @@ class AssetImageHandler extends StatelessWidget {
             package: package,
             height: height ?? calHeight,
             width: width ?? calWidth,
+            fit: fit,
           ),
         );
       },
