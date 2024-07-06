@@ -70,39 +70,42 @@ class ImageShape extends StatelessWidget {
           radius: 100,
           backgroundColor: backgroundColor,
           child: ClipOval(
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: colorFilter != null
-                  ? ColorFiltered(
-                      colorFilter: colorFilter!,
-                      child: child,
-                    )
-                  : child,
-            ),
+            child: colorFilter != null
+                ? ColorFiltered(
+                    colorFilter: colorFilter!,
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: colorFilter != null
+                          ? ColorFiltered(
+                              colorFilter: colorFilter!,
+                              child: child,
+                            )
+                          : child,
+                    ),
+                  )
+                : child,
           ),
         ),
       );
     }
-    return Center(
-      child: Container(
-        height: height,
-        width: width,
-        padding: padding,
-        margin: margin,
-        decoration: BoxDecoration(
-          border: border,
-          color: backgroundColor,
-          borderRadius: borderRadius,
-        ),
-        child: ClipRRect(
-          borderRadius: borderRadius ?? BorderRadius.zero,
-          child: colorFilter != null
-              ? ColorFiltered(
-                  colorFilter: colorFilter!,
-                  child: child,
-                )
-              : child,
-        ),
+    return Container(
+      height: height,
+      width: width,
+      padding: padding,
+      margin: margin,
+      decoration: BoxDecoration(
+        border: border,
+        color: backgroundColor,
+        borderRadius: borderRadius,
+      ),
+      child: ClipRRect(
+        borderRadius: borderRadius ?? BorderRadius.zero,
+        child: colorFilter != null
+            ? ColorFiltered(
+                colorFilter: colorFilter!,
+                child: child,
+              )
+            : child,
       ),
     );
   }
