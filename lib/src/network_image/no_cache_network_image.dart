@@ -28,6 +28,7 @@ class NetworkImageHandler extends StatefulWidget {
     this.borderRadius,
     this.backgroundColor,
     this.shape,
+        this.fit = BoxFit.contain,
   });
 
   /// `src` is the network image source for [NetworkImageHandler].
@@ -83,6 +84,9 @@ class NetworkImageHandler extends StatefulWidget {
 
   /// using borderRadius You can add a border to the image
   final BorderRadiusGeometry? borderRadius;
+
+  /// Handle fit of the image
+  final BoxFit fit;
 
   @override
   State<NetworkImageHandler> createState() => _NetworkImageHandlerState();
@@ -204,6 +208,10 @@ class _NetworkImageHandlerState extends State<NetworkImageHandler>
       borderRadius: widget.borderRadius,
       child: SvgPicture.memory(
         imgFile!.file,
+        colorFilter: widget.colorFilter,
+        width: widget.width,
+        height: widget.height,
+        fit: widget.fit,
       ),
     );
   }
@@ -252,6 +260,7 @@ class _NetworkImageHandlerState extends State<NetworkImageHandler>
             imgFile!.file,
             height: widget.height ?? calHeight,
             width: widget.width ?? calWidth,
+            fit: widget.fit,
           ),
         );
       },

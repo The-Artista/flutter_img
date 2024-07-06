@@ -21,6 +21,7 @@ class AssetImageHandler extends StatelessWidget {
     this.colorFilter,
     this.borderRadius,
     this.backgroundColor,
+    this.fit = BoxFit.contain,
   });
 
   /// `src` is the asset image source for [AssetImageHandler].
@@ -131,6 +132,9 @@ class AssetImageHandler extends StatelessWidget {
         child: SvgPicture.asset(
           src,
           package: package,
+          fit: BoxFit.cover,
+          height: height,
+          width: width,
         ),
       );
     }
@@ -144,7 +148,12 @@ class AssetImageHandler extends StatelessWidget {
       margin: margin,
       colorFilter: colorFilter,
       borderRadius: borderRadius,
-      child: SvgPicture.string(src),
+      child: SvgPicture.string(
+        src,
+        fit: fit,
+        height: height,
+        width: width,
+      ),
     );
   }
 }
