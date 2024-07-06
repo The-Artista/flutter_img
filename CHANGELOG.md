@@ -36,6 +36,15 @@ fixed network svg image problem
 ## v0.0.1
 ChangeLog starts here.
 
+## [0.2.1+159] - 2024-07-06
+### Changed
+- \## Bugfixes
+- image shape and aspect ratio
+- box fit
+- box fit asset image
+- check cache and network image
+- **deps:** bump actions/setup-java from 1 to 4
+
 ## [0.1.6+148] - 2023-12-28
 ### Changed
 - \## Build System
@@ -55,4 +64,5 @@ ChangeLog starts here.
 - updated example code
 - Update README.md with flutter\_img package information and examples
 
+[0.2.1+159]: https://github.com/The-Artista/flutter_img/compare/v0.1.5...v0.1.6
 [0.1.6+148]: https://github.com/The-Artista/flutter_img/releases/tag/v0.1.6
